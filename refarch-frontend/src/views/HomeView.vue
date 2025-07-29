@@ -18,6 +18,12 @@
           <span :class="status">{{ status }}</span>
         </p>
       </v-col>
+
+      <v-col cols="12">
+        <v-btn color="primary" @click="goToNotes">
+          Jetzt TODOs ansehen
+        </v-btn>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -25,6 +31,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import { checkHealth } from "@/api/health-client";
 import { useSnackbarStore } from "@/stores/snackbar";
@@ -42,6 +49,11 @@ onMounted(() => {
       snackbarStore.showMessage(error);
     });
 });
+
+const router = useRouter();
+const goToNotes = () => {
+  router.push('/notizenansicht'); // Route zur Notizenansicht
+};
 </script>
 
 <style scoped>

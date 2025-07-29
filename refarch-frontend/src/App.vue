@@ -20,18 +20,7 @@
           cols="6"
           class="d-flex align-center justify-center"
         >
-          <v-text-field
-            id="searchField"
-            v-model="query"
-            flat
-            variant="solo-inverted"
-            hide-details
-            :label="t('app.search')"
-            clearable
-            :prepend-inner-icon="mdiMagnify"
-            theme="dark"
-            @keyup.enter="search"
-          />
+          <p class="text-h4"> Willkommen </p>
         </v-col>
         <v-col
           cols="3"
@@ -62,6 +51,21 @@
             {{ t("views.getStarted.navText") }}
           </v-list-item-title>
         </v-list-item>
+        <v-list-item :to="{ name: ROUTES_NOTIZENANSICHT }">
+          <v-list-item-title>
+            Übersicht
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: ROUTES_PERSOENLICHE_TODOS }">
+          <v-list-item-title>
+            Persönliche TODOs
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: ROUTES_MIR_ZUGEWIESENE_TODOS }">
+          <v-list-item-title>
+            Zugewiesene TODOs
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -86,7 +90,13 @@ import { useI18n } from "vue-i18n";
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
 import TheSnackbar from "@/components/TheSnackbar.vue";
-import { APPSWITCHER_URL, ROUTES_GETSTARTED } from "@/constants";
+import {
+  APPSWITCHER_URL,
+  ROUTES_GETSTARTED,
+  ROUTES_MIR_ZUGEWIESENE_TODOS,
+  ROUTES_NOTIZENANSICHT,
+  ROUTES_PERSOENLICHE_TODOS
+} from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
@@ -118,17 +128,5 @@ function loadUser(): void {
         userStore.setUser(null);
       }
     });
-}
-
-/**
- * Navigates to the page with the search results and sends an event to trigger further searches.
- */
-
-async function search(): Promise<void> {
-  if (query.value !== "" && query.value !== null) {
-    snackbarStore.showMessage({
-      message: "Sie haben nach " + query.value + " gesucht. ;)",
-    });
-  }
 }
 </script>

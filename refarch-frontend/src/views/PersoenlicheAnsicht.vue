@@ -13,12 +13,14 @@
         <v-card outlined>
           <v-card-title>Abgelaufene Deadlines</v-card-title>
           <div class="todo-list">
-            <div v-for="(todo, index) in expiredDeadlines" :key="index" class="todo-item d-flex align-center mb-0">
-              <v-text-field v-model="todo.text" placeholder="ToDo" dense hide-details clearable></v-text-field>
-              <v-btn class="delete-button" @click="deleteExpiredDeadline(index)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+            <todo-item
+                v-for="(todo, index) in expiredDeadlines"
+                :key="index"
+                :todo="todo"
+                :index="index"
+                :deleteCallback="deleteExpiredDeadline"
+                placeholder="ToDo"
+            />
           </div>
         </v-card>
       </v-col>
@@ -27,12 +29,14 @@
         <v-card outlined>
           <v-card-title>Nächste 2 Wochen (oder laufende Deadlines)</v-card-title>
           <div class="todo-list">
-            <div v-for="(todo, index) in nextTwoWeeks" :key="index" class="todo-item d-flex align-center mb-0">
-              <v-text-field v-model="todo.text" placeholder="ToDo" dense hide-details clearable></v-text-field>
-              <v-btn class="delete-button" @click="deleteNextTwoWeek(index)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+            <todo-item
+                v-for="(todo, index) in nextTwoWeeks"
+                :key="index"
+                :todo="todo"
+                :index="index"
+                :deleteCallback="deleteNextTwoWeek"
+                placeholder="ToDo"
+            />
           </div>
         </v-card>
       </v-col>
@@ -41,12 +45,14 @@
         <v-card outlined>
           <v-card-title>Längere Deadlines</v-card-title>
           <div class="todo-list">
-            <div v-for="(todo, index) in longerDeadlines" :key="index" class="todo-item d-flex align-center mb-0">
-              <v-text-field v-model="todo.text" placeholder="ToDo" dense hide-details clearable></v-text-field>
-              <v-btn class="delete-button" @click="deleteLongerDeadline(index)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+            <todo-item
+                v-for="(todo, index) in longerDeadlines"
+                :key="index"
+                :todo="todo"
+                :index="index"
+                :deleteCallback="deleteLongerDeadline"
+                placeholder="ToDo"
+            />
           </div>
         </v-card>
       </v-col>
@@ -66,7 +72,6 @@
               :rules="[value => !!value || 'Titel ist erforderlich.']">
           </v-text-field>
           <v-textarea v-model="newTodo.description" label="Beschreibung"></v-textarea>
-
           <v-select
               v-model="newTodo.priority"
               :items="['Hoch', 'Mittel', 'Niedrig']"
@@ -74,7 +79,6 @@
               :rules="[value => !!value || 'Bitte wähle eine Priorität.']"
               required>
           </v-select>
-
           <v-text-field
               v-model="newTodo.deadline"
               label="Fälligkeitsdatum (TT.MM.JJJJ)"
@@ -98,7 +102,12 @@
 </template>
 
 <script>
+import TodoItem from './TodoItem.vue'; // Importiere die TodoItem-Komponente
+
 export default {
+  components: {
+    TodoItem // Registriere die Komponente
+  },
   data() {
     return {
       modal: false,
@@ -113,7 +122,6 @@ export default {
         const regex = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(20[0-9]{2}|19[0-9]{2})$/;
         return regex.test(value) || 'Ungültiges Datum. Bitte im Format TT.MM.JJJJ eingeben.';
       },
-      // Leere Listen für ToDos
       expiredDeadlines: [],
       nextTwoWeeks: [],
       longerDeadlines: []
@@ -149,7 +157,6 @@ export default {
       const currentDate = new Date();
       const deadlineDate = this.newTodo.deadline ? this.parseDate(this.newTodo.deadline) : null;
 
-      // Bestimme die Liste, zu der das ToDo hinzugefügt werden soll
       if (deadlineDate) {
         if (deadlineDate < currentDate) {
           this.expiredDeadlines.push({ text: this.newTodo.title, priority: this.newTodo.priority });
@@ -170,7 +177,7 @@ export default {
     },
     parseDate(dateString) {
       const parts = dateString.split('.');
-      return new Date(parts[2], parts[1] - 1, parts[0]); // Jahr, Monat (0-basiert), Tag
+      return new Date(parts[2], parts[1] - 1, parts[0]);
     },
     resetNewTodo() {
       this.newTodo = {
@@ -196,16 +203,5 @@ export default {
   max-height: 600px;
   overflow-y: auto;
   margin-top: 16px;
-}
-
-.todo-item {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  width: 100%;
-}
-
-.delete-button {
-  align-items: center;
 }
 </style>

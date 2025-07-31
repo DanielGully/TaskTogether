@@ -6,35 +6,21 @@
           <v-card-title class="d-flex justify-between align-center">
             <span>Persönliche ToDos</span>
             <router-link to="/persoenliche-todos" class="ml-auto">
-              <v-btn>
-                ...
-              </v-btn>
+              <v-btn>...</v-btn>
             </router-link>
           </v-card-title>
           <v-card-actions>
             <v-btn @click="addTodo">ToDo hinzufügen</v-btn>
           </v-card-actions>
           <div class="todo-list">
-            <div
+            <todo-item
                 v-for="(todo, index) in personalTodos"
                 :key="index"
-                class="todo-item d-flex align-center mb-0"
-            >
-              <v-text-field
-                  v-model="todo.text"
-                  placeholder="Neues ToDo"
-                  dense
-                  hide-details
-                  clearable
-              ></v-text-field>
-              <v-btn
-                  class="delete-button"
-                  @click="deleteTodo(index)"
-                  icon
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+                :todo="todo"
+                :index="index"
+                :deleteCallback="deleteTodo"
+                placeholder="Neues ToDo"
+            />
           </div>
         </v-card>
       </v-col>
@@ -44,35 +30,21 @@
           <v-card-title class="d-flex justify-between align-center">
             <span>Mir zugewiesene GruppenToDos</span>
             <router-link to="/mir-zugewiesene-todos" class="ml-auto">
-              <v-btn>
-                ...
-              </v-btn>
+              <v-btn>...</v-btn>
             </router-link>
           </v-card-title>
           <v-card-actions>
             <v-btn @click="addGroupTodo">ToDo hinzufügen</v-btn>
           </v-card-actions>
           <div class="todo-list">
-            <div
+            <todo-item
                 v-for="(todo, index) in groupTodos"
                 :key="index"
-                class="todo-item d-flex align-center mb-0"
-            >
-              <v-text-field
-                  v-model="todo.text"
-                  placeholder="Neues GruppenToDo"
-                  dense
-                  hide-details
-                  clearable
-              ></v-text-field>
-              <v-btn
-                  class="delete-button"
-                  @click="deleteGroupTodo(index)"
-                  icon
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+                :todo="todo"
+                :index="index"
+                :deleteCallback="deleteGroupTodo"
+                placeholder="Neues GruppenToDo"
+            />
           </div>
         </v-card>
       </v-col>
@@ -81,7 +53,14 @@
 </template>
 
 <script>
+import TodoItem from './TodoItem.vue';
+import {defaultCatchHandler, defaultResponseHandler, postConfig} from "@/api/fetch-utils.js";
+import ToDo from "@/types/ToDo.js"; // Importiere die TodoItem-Komponente
+
 export default {
+  components: {
+    TodoItem // Registriere die Komponente
+  },
   data() {
     return {
       personalTodos: [],
@@ -110,16 +89,5 @@ export default {
   max-height: 453px;
   overflow-y: auto;
   margin-top: 16px;
-}
-
-.todo-item {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  width: 100%;
-}
-
-.delete-button {
-  align-items: center;
 }
 </style>

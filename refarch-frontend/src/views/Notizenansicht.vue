@@ -54,12 +54,10 @@
 
 <script>
 import TodoItem from './TodoItem.vue';
-import {defaultCatchHandler, defaultResponseHandler, postConfig} from "@/api/fetch-utils.js";
-import ToDo from "@/types/ToDo.js"; // Importiere die TodoItem-Komponente
 
 export default {
   components: {
-    TodoItem // Registriere die Komponente
+    TodoItem
   },
   data() {
     return {

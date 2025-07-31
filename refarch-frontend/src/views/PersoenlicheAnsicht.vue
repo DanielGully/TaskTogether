@@ -58,7 +58,6 @@
       </v-col>
     </v-row>
 
-    <!-- Modal for adding new ToDo -->
     <v-dialog v-model="modal" max-width="600px">
       <v-card>
         <v-card-title>
@@ -102,7 +101,7 @@
 </template>
 
 <script>
-import TodoItem from './TodoItem.vue'; // Importiere die TodoItem-Komponente
+import TodoItem from './TodoItem.vue';
 
 export default {
   components: {

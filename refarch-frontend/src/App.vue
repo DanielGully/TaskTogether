@@ -10,9 +10,9 @@
           <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
           <router-link to="/">
             <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">{{ t("app.name.part1") }}</span>
-              <span class="text-secondary">{{ t("app.name.part2") }}</span>
-              <span class="text-white">{{ t("app.name.part3") }}</span>
+              <span class="text-white">{{ ("app.name.part1") }}</span>
+              <span class="text-secondary">{{ ("app.name.part2") }}</span>
+              <span class="text-white">{{ ("app.name.part3") }}</span>
             </v-toolbar-title>
           </router-link>
         </v-col>
@@ -48,7 +48,7 @@
       <v-list>
         <v-list-item :to="{ name: ROUTES_GETSTARTED }">
           <v-list-item-title>
-            {{ t("views.getStarted.navText") }}
+            {{ ("views.getStarted.navText") }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_NOTIZENANSICHT }">
@@ -79,7 +79,6 @@ import { mdiApps } from "@mdi/js";
 import { AppSwitcher } from "@muenchen/appswitcher-vue";
 import { useToggle } from "@vueuse/core";
 import { onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
 
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
@@ -95,12 +94,8 @@ import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
 
-const { t } = useI18n();
-
-const query = ref<string>("");
 const appswitcherBaseUrl = APPSWITCHER_URL;
 
-const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
 

@@ -5,7 +5,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
-import TheSnackbar from "@/components/TheSnackbar.vue";
+import TheSnackbar from "@/src/components/TheSnackbar.vue";
 
 const pinia = createPinia();
 const vuetify = createVuetify({

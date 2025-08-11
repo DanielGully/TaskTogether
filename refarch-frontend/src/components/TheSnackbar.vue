@@ -24,8 +24,6 @@ import { useI18n } from "vue-i18n";
 import { SNACKBAR_DEFAULT_TIMEOUT, STATUS_INDICATORS } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 
-const { t } = useI18n();
-
 const snackbarStore = useSnackbarStore();
 
 const show = ref(false);

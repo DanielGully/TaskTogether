@@ -78,7 +78,7 @@
 import { mdiApps } from "@mdi/js";
 import { AppSwitcher } from "@muenchen/appswitcher-vue";
 import { useToggle } from "@vueuse/core";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
@@ -90,7 +90,6 @@ import {
   ROUTES_NOTIZENANSICHT,
   ROUTES_PERSOENLICHE_TODOS,
 } from "@/constants";
-import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";
 import User, { UserLocalDevelopment } from "@/types/User";
 

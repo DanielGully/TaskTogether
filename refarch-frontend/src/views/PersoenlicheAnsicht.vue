@@ -124,7 +124,7 @@ import TodoItem from "./TodoItem.vue";
 
 export default {
   components: {
-    TodoItem, // Registriere die Komponente
+    TodoItem,
   },
   data() {
     return {
@@ -135,7 +135,9 @@ export default {
         priority: "Niedrig",
         deadline: "",
       },
-      dateRuleForOptionalField: (value) => {
+      dateRuleForOptionalField: (
+        value: string | undefined
+      ): boolean | string => {
         if (!value) return true;
         const regex =
           /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(20[0-9]{2}|19[0-9]{2})$/;
@@ -164,13 +166,13 @@ export default {
     },
   },
   methods: {
-    deleteExpiredDeadline(index) {
+    deleteExpiredDeadline(index: number): void {
       this.expiredDeadlines.splice(index, 1);
     },
-    deleteNextTwoWeek(index) {
+    deleteNextTwoWeek(index: number): void {
       this.nextTwoWeeks.splice(index, 1);
     },
-    deleteLongerDeadline(index) {
+    deleteLongerDeadline(index: number): void {
       this.longerDeadlines.splice(index, 1);
     },
     openModal() {
@@ -219,7 +221,7 @@ export default {
 
       this.closeModal();
     },
-    parseDate(dateString) {
+    parseDate(dateString: string) {
       const parts = dateString.split(".");
       return new Date(parts[2], parts[1] - 1, parts[0]);
     },

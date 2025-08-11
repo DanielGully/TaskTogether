@@ -12,7 +12,7 @@
       variant="text"
       @click="hide"
     >
-      {{ t("common.actions.close") }}
+      {{ "common.actions.close" }}
     </v-btn>
   </v-snackbar>
 </template>

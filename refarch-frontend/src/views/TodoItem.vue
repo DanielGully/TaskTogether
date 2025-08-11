@@ -32,7 +32,9 @@ export default {
   },
   methods: {
     deleteTodo() {
-      this.deleteCallback(this.index);
+      if (this.deleteCallback) {
+        this.deleteCallback(this.index);
+      }
     },
   },
   watch: {

@@ -59,13 +59,18 @@
 </template>
 
 <script lang="ts">
+import type { Todo } from "@/interfaces";
+
 import TodoItem from "./TodoItem.vue";
 
 export default {
   components: {
     TodoItem,
   },
-  data() {
+  data(): {
+    personalTodos: Todo[];
+    groupTodos: Todo[];
+  } {
     return {
       personalTodos: [],
       groupTodos: [],
@@ -73,15 +78,15 @@ export default {
   },
   methods: {
     addTodo() {
-      this.personalTodos.push({ text: "" });
+      this.personalTodos.push({ text: "", priority: "Niedrig" });
     },
     addGroupTodo() {
-      this.groupTodos.push({ text: "" });
+      this.groupTodos.push({ text: "", priority: "Niedrig" });
     },
-    deleteTodo(index) {
+    deleteTodo(index: number): void {
       this.personalTodos.splice(index, 1);
     },
-    deleteGroupTodo(index) {
+    deleteGroupTodo(index: number): void {
       this.groupTodos.splice(index, 1);
     },
   },

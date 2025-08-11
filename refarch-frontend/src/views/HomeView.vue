@@ -52,7 +52,6 @@ onMounted(() => {
 
 const router = useRouter();
 const goToNotes = () => {
-  router.push("/notizenansicht"); // Route zur Notizenansicht
+  router.push("/notizenansicht");
 };
 </script>
-

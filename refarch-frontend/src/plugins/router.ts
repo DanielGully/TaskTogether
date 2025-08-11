@@ -12,7 +12,7 @@ import {
 import GetStartedView from "@/views/GetStartedView.vue";
 import HomeView from "@/views/HomeView.vue";
 import MirZugewieseneTodos from "@/views/MirZugewiesenAnsicht.vue";
-import Notizenansicht from "@/views/Notizenansicht.vue";
+import Notizenansicht from "@/views/NotizenAnsicht.vue";
 import PersoenlicheTodos from "@/views/PersoenlicheAnsicht.vue";
 
 // Definiere die Routen

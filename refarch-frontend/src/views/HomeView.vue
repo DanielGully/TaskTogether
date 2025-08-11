@@ -11,10 +11,10 @@
 
       <v-col class="mb-4">
         <h1 class="text-h3 font-weight-bold mb-3">
-          {{ ("views.home.header") }}
+          {{ "views.home.header" }}
         </h1>
         <p>
-          {{ ("views.home.apiGatewayStatus") }}
+          {{ "views.home.apiGatewayStatus" }}
           <span :class="status">{{ status }}</span>
         </p>
       </v-col>
@@ -56,12 +56,3 @@ const goToNotes = () => {
 };
 </script>
 
-<style scoped>
-.UP {
-  color: limegreen;
-}
-
-.DOWN {
-  color: lightcoral;
-}
-</style>

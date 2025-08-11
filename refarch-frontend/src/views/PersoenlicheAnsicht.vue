@@ -119,7 +119,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import TodoItem from "./TodoItem.vue";
 
 export default {

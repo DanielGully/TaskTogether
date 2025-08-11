@@ -10,9 +10,9 @@
           <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
           <router-link to="/">
             <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">{{ ("app.name.part1") }}</span>
-              <span class="text-secondary">{{ ("app.name.part2") }}</span>
-              <span class="text-white">{{ ("app.name.part3") }}</span>
+              <span class="text-white">{{ "app.name.part1" }}</span>
+              <span class="text-secondary">{{ "app.name.part2" }}</span>
+              <span class="text-white">{{ "app.name.part3" }}</span>
             </v-toolbar-title>
           </router-link>
         </v-col>
@@ -48,7 +48,7 @@
       <v-list>
         <v-list-item :to="{ name: ROUTES_GETSTARTED }">
           <v-list-item-title>
-            {{ ("views.getStarted.navText") }}
+            {{ "views.getStarted.navText" }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_NOTIZENANSICHT }">

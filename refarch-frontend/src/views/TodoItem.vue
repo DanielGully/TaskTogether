@@ -1,7 +1,7 @@
 <template>
   <div class="todo-item d-flex align-center mb-0">
     <v-text-field
-      v-model="todo.text"
+      v-model="localTodo.text"
       :placeholder="placeholder"
       dense
       hide-details
@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     todo: Object,
@@ -25,9 +25,22 @@ export default {
     deleteCallback: Function,
     placeholder: String,
   },
+  data() {
+    return {
+      localTodo: { ...this.todo },
+    };
+  },
   methods: {
     deleteTodo() {
       this.deleteCallback(this.index);
+    },
+  },
+  watch: {
+    todo: {
+      handler(newValue) {
+        this.localTodo = { ...newValue };
+      },
+      deep: true,
     },
   },
 };

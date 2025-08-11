@@ -5,7 +5,10 @@
         <v-card>
           <v-card-title class="d-flex justify-between align-center">
             <span>Persönliche ToDos</span>
-            <router-link to="/persoenliche-todos" class="ml-auto">
+            <router-link
+              to="/persoenliche-todos"
+              class="ml-auto"
+            >
               <v-btn>...</v-btn>
             </router-link>
           </v-card-title>
@@ -14,12 +17,12 @@
           </v-card-actions>
           <div class="todo-list">
             <todo-item
-                v-for="(todo, index) in personalTodos"
-                :key="index"
-                :todo="todo"
-                :index="index"
-                :deleteCallback="deleteTodo"
-                placeholder="Neues ToDo"
+              v-for="(todo, index) in personalTodos"
+              :key="index"
+              :todo="todo"
+              :index="index"
+              :deleteCallback="deleteTodo"
+              placeholder="Neues ToDo"
             />
           </div>
         </v-card>
@@ -29,7 +32,10 @@
         <v-card>
           <v-card-title class="d-flex justify-between align-center">
             <span>Mir zugewiesene GruppenToDos</span>
-            <router-link to="/mir-zugewiesene-todos" class="ml-auto">
+            <router-link
+              to="/mir-zugewiesene-todos"
+              class="ml-auto"
+            >
               <v-btn>...</v-btn>
             </router-link>
           </v-card-title>
@@ -38,12 +44,12 @@
           </v-card-actions>
           <div class="todo-list">
             <todo-item
-                v-for="(todo, index) in groupTodos"
-                :key="index"
-                :todo="todo"
-                :index="index"
-                :deleteCallback="deleteGroupTodo"
-                placeholder="Neues GruppenToDo"
+              v-for="(todo, index) in groupTodos"
+              :key="index"
+              :todo="todo"
+              :index="index"
+              :deleteCallback="deleteGroupTodo"
+              placeholder="Neues GruppenToDo"
             />
           </div>
         </v-card>
@@ -53,33 +59,33 @@
 </template>
 
 <script>
-import TodoItem from './TodoItem.vue';
+import TodoItem from "./TodoItem.vue";
 
 export default {
   components: {
-    TodoItem
+    TodoItem,
   },
   data() {
     return {
       personalTodos: [],
-      groupTodos: []
+      groupTodos: [],
     };
   },
   methods: {
     addTodo() {
-      this.personalTodos.push({ text: '' });
+      this.personalTodos.push({ text: "" });
     },
     addGroupTodo() {
-      this.groupTodos.push({ text: '' });
+      this.groupTodos.push({ text: "" });
     },
     deleteTodo(index) {
       this.personalTodos.splice(index, 1);
     },
     deleteGroupTodo(index) {
       this.groupTodos.splice(index, 1);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

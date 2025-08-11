@@ -20,7 +20,7 @@
           cols="6"
           class="d-flex align-center justify-center"
         >
-          <p class="text-h4"> Willkommen </p>
+          <p class="text-h4">{{ "Willkommen" }}</p>
         </v-col>
         <v-col
           cols="3"
@@ -52,19 +52,13 @@
           </v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_NOTIZENANSICHT }">
-          <v-list-item-title>
-            Übersicht
-          </v-list-item-title>
+          <v-list-item-title> Übersicht </v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_PERSOENLICHE_TODOS }">
-          <v-list-item-title>
-            Persönliche TODOs
-          </v-list-item-title>
+          <v-list-item-title> Persönliche TODOs </v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_MIR_ZUGEWIESENE_TODOS }">
-          <v-list-item-title>
-            Zugewiesene TODOs
-          </v-list-item-title>
+          <v-list-item-title> Zugewiesene TODOs </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -81,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiApps, mdiMagnify } from "@mdi/js";
+import { mdiApps } from "@mdi/js";
 import { AppSwitcher } from "@muenchen/appswitcher-vue";
 import { useToggle } from "@vueuse/core";
 import { onMounted, ref } from "vue";
@@ -95,7 +89,7 @@ import {
   ROUTES_GETSTARTED,
   ROUTES_MIR_ZUGEWIESENE_TODOS,
   ROUTES_NOTIZENANSICHT,
-  ROUTES_PERSOENLICHE_TODOS
+  ROUTES_PERSOENLICHE_TODOS,
 } from "@/constants";
 import { useSnackbarStore } from "@/stores/snackbar";
 import { useUserStore } from "@/stores/user";

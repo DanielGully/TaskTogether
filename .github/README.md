@@ -1,4 +1,5 @@
 <!-- General project links -->
+
 [open-issues]: https://github.com/it-at-m/refarch-templates/issues
 [new-issue]: https://github.com/it-at-m/refarch-templates/issues/new/choose
 [milestones]: https://github.com/it-at-m/refarch-templates/milestones
@@ -10,16 +11,18 @@
 [code-of-conduct]: ./CODE_OF_CONDUCT.md
 
 <!-- Project specific links -->
+
 [refarch-documentation]: https://refarch.oss.muenchen.de/
 [refarch-code]: https://github.com/it-at-m/refarch
-[spring-documentation]: https://spring.io/ 
-[vuejs-documentation]:  https://vuejs.org/
+[spring-documentation]: https://spring.io/
+[vuejs-documentation]: https://vuejs.org/
 [getting-started-documentation]: https://refarch.oss.muenchen.de/templates/getting-started
 [develop-documentation]: https://refarch.oss.muenchen.de/templates/develop
 [document-documentation]: https://refarch.oss.muenchen.de/templates/document
 [organize-documentation]: https://refarch.oss.muenchen.de/templates/organize
 
 <!-- Shields.io links -->
+
 [documentation-shield]: https://img.shields.io/badge/documentation-blue?style=for-the-badge
 [new-issue-shield]: https://img.shields.io/badge/new%20issue-blue?style=for-the-badge
 [made-with-love-shield]: https://img.shields.io/badge/made%20with%20%E2%9D%A4%20by-it%40M-yellow?style=for-the-badge

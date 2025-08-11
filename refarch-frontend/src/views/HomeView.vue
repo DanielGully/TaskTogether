@@ -20,7 +20,10 @@
       </v-col>
 
       <v-col cols="12">
-        <v-btn color="primary" @click="goToNotes">
+        <v-btn
+          color="primary"
+          @click="goToNotes"
+        >
           Jetzt TODOs ansehen
         </v-btn>
       </v-col>
@@ -52,7 +55,7 @@ onMounted(() => {
 
 const router = useRouter();
 const goToNotes = () => {
-  router.push('/notizenansicht'); // Route zur Notizenansicht
+  router.push("/notizenansicht"); // Route zur Notizenansicht
 };
 </script>
 

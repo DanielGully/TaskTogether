@@ -5,16 +5,15 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import {
   ROUTES_GETSTARTED,
   ROUTES_HOME,
+  ROUTES_MIR_ZUGEWIESENE_TODOS,
   ROUTES_NOTIZENANSICHT,
   ROUTES_PERSOENLICHE_TODOS,
-  ROUTES_MIR_ZUGEWIESENE_TODOS
 } from "@/constants";
-
 import GetStartedView from "@/views/GetStartedView.vue";
 import HomeView from "@/views/HomeView.vue";
+import MirZugewieseneTodos from "@/views/MirZugewiesenAnsicht.vue";
 import Notizenansicht from "@/views/Notizenansicht.vue";
 import PersoenlicheTodos from "@/views/PersoenlicheAnsicht.vue";
-import MirZugewieseneTodos from "@/views/MirZugewiesenAnsicht.vue";
 
 // Definiere die Routen
 const routes = [
@@ -35,12 +34,12 @@ const routes = [
     component: Notizenansicht,
   },
   {
-    path: '/persoenliche-todos',
+    path: "/persoenliche-todos",
     name: ROUTES_PERSOENLICHE_TODOS, // Konstanten für die Route hinzufügen
     component: PersoenlicheTodos,
   },
   {
-    path: '/mir-zugewiesene-todos',
+    path: "/mir-zugewiesene-todos",
     name: ROUTES_MIR_ZUGEWIESENE_TODOS, // Konstanten für die Route hinzufügen
     component: MirZugewieseneTodos,
   },

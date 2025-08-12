@@ -78,8 +78,7 @@
             label="*Titel"
             required
             :rules="[(value) => !!value || 'Titel ist erforderlich.']"
-          >
-          </v-text-field>
+          ></v-text-field>
           <v-textarea
             v-model="newTodo.description"
             label="Beschreibung"
@@ -90,8 +89,7 @@
             label="*Priorität"
             :rules="[(value) => !!value || 'Bitte wähle eine Priorität.']"
             required
-          >
-          </v-select>
+          ></v-select>
           <v-text-field
             v-model="newTodo.deadline"
             label="Fälligkeitsdatum (TT.MM.JJJJ)"
@@ -110,9 +108,8 @@
             text
             @click="saveTodo"
             :disabled="!isFormValid"
+            >Speichern</v-btn
           >
-            Speichern
-          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -120,6 +117,8 @@
 </template>
 
 <script lang="ts">
+import type { Todo } from "@/interfaces.ts";
+
 import TodoItem from "./TodoItem.vue";
 
 export default {
@@ -132,8 +131,13 @@ export default {
       newTodo: {
         title: "",
         description: "",
-        priority: "Niedrig",
+        priority: "Niedrig" as "Hoch" | "Mittel" | "Niedrig",
         deadline: "",
+      } as {
+        title: string;
+        description?: string;
+        priority: "Hoch" | "Mittel" | "Niedrig";
+        deadline?: string;
       },
       dateRuleForOptionalField: (
         value: string | undefined
@@ -146,9 +150,9 @@ export default {
           "Ungültiges Datum. Bitte im Format TT.MM.JJJJ eingeben."
         );
       },
-      expiredDeadlines: [],
-      nextTwoWeeks: [],
-      longerDeadlines: [],
+      expiredDeadlines: [] as Todo[],
+      nextTwoWeeks: [] as Todo[],
+      longerDeadlines: [] as Todo[],
     };
   },
   computed: {
@@ -157,7 +161,6 @@ export default {
       const isPriorityValid = !!this.newTodo.priority;
       const isDeadlineValid =
         this.dateRuleForOptionalField(this.newTodo.deadline) === true;
-
       return (
         isTitleValid &&
         isPriorityValid &&
@@ -183,6 +186,13 @@ export default {
       this.resetNewTodo();
     },
     saveTodo() {
+      const newTodo: Todo = {
+        text: this.newTodo.title,
+        priority: this.newTodo.priority,
+        description: this.newTodo.description,
+        deadline: this.newTodo.deadline,
+      };
+
       const currentDate = new Date();
       const deadlineDate = this.newTodo.deadline
         ? this.parseDate(this.newTodo.deadline)
@@ -190,40 +200,32 @@ export default {
 
       if (deadlineDate) {
         if (deadlineDate < currentDate) {
-          this.expiredDeadlines.push({
-            text: this.newTodo.title,
-            priority: this.newTodo.priority,
-          });
+          this.expiredDeadlines.push(newTodo);
           this.expiredDeadlines = this.sortTodos(this.expiredDeadlines);
         } else if (
           deadlineDate.getMonth() === currentDate.getMonth() &&
           deadlineDate.getFullYear() === currentDate.getFullYear()
         ) {
-          this.nextTwoWeeks.push({
-            text: this.newTodo.title,
-            priority: this.newTodo.priority,
-          });
+          this.nextTwoWeeks.push(newTodo);
           this.nextTwoWeeks = this.sortTodos(this.nextTwoWeeks);
         } else {
-          this.longerDeadlines.push({
-            text: this.newTodo.title,
-            priority: this.newTodo.priority,
-          });
+          this.longerDeadlines.push(newTodo);
           this.longerDeadlines = this.sortTodos(this.longerDeadlines);
         }
       } else {
-        this.longerDeadlines.push({
-          text: this.newTodo.title,
-          priority: this.newTodo.priority,
-        });
+        this.longerDeadlines.push(newTodo);
         this.longerDeadlines = this.sortTodos(this.longerDeadlines);
       }
 
       this.closeModal();
     },
-    parseDate(dateString: string) {
+    parseDate(dateString: string): Date {
       const parts = dateString.split(".");
-      return new Date(parts[2], parts[1] - 1, parts[0]);
+      return new Date(
+        parseInt(parts[2]),
+        parseInt(parts[1]) - 1,
+        parseInt(parts[0])
+      );
     },
     resetNewTodo() {
       this.newTodo = {
@@ -233,7 +235,7 @@ export default {
         deadline: "",
       };
     },
-    sortTodos(todos) {
+    sortTodos(todos: Todo[]) {
       return todos.sort((a, b) => {
         const priorityOrder = ["Hoch", "Mittel", "Niedrig"];
         const priorityComparison =

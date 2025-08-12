@@ -18,7 +18,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     todo: Object,
     index: Number,
@@ -45,7 +47,7 @@ export default {
       deep: true,
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -55,7 +57,6 @@ export default {
   margin: 0;
   width: 100%;
 }
-
 .delete-button {
   align-items: center;
 }

@@ -1,4 +1,6 @@
 export interface Todo {
   text: string;
-  priority: string;
+  priority: "Hoch" | "Mittel" | "Niedrig";
+  description?: string;
+  deadline?: string;
 }

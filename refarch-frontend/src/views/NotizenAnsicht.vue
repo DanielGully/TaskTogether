@@ -61,8 +61,8 @@
 <script lang="ts">
 import type { Todo } from "@/interfaces";
 
-import { requestNewId } from "@/api/fetch-utils.ts";
 import TodoItem from "./TodoItem.vue";
+import {requestNewId} from "@/api/fetch-NewId.ts";
 
 export default {
   components: {

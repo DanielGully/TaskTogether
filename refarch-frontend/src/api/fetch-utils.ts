@@ -156,15 +156,3 @@ function getXSRFToken(): string {
   );
   return (help ? help.pop() : "") as string;
 }
-
-/**
- * Requests a new ID from the server.
- */
-export function requestNewId(): Promise<number> {
-  return fetch("/api/todos/backend-service/generate-id").then((response) => {
-    if (!response.ok) {
-      throw new Error("Fehler beim Abrufen der ID.");
-    }
-    return response.json();
-  });
-}

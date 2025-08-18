@@ -29,5 +29,5 @@ public class User extends BaseEntity {
     @NotNull @Email private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ToDo> createdToDos;
+    private List<ToDoEntity> createdToDoEntities;
 }

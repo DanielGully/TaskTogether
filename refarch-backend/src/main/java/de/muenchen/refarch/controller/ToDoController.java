@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/todos")
+@RequestMapping("todos")
 public class ToDoController {
 
     @Autowired
     private ToDoService toDoService;
 
-    @GetMapping("/generate-id")
+    @GetMapping("generate-id")
     public Long generateNewId() {
         return toDoService.generateNewId();
     }

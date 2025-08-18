@@ -16,16 +16,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * This class represents a ToDo entity.
+ * This class represents a ToDoEntity.
  */
-@Table(name = "ToDo")
+@Table(name = "ToDoEntity")
 @Entity
 @Getter
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class ToDo extends BaseEntity {
+public class ToDoEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     @NotNull @Size(min = 2, max = 100) private String title;
 

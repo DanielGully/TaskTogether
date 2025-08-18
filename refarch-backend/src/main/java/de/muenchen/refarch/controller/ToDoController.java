@@ -5,7 +5,11 @@ import de.muenchen.refarch.entities.dto.ToDoResponseDTO;
 import de.muenchen.refarch.mapper.ToDoMapper;
 import de.muenchen.refarch.services.ToDoService;
 import jakarta.validation.Valid;
+
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -79,6 +83,14 @@ public class ToDoController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteToDo(@PathVariable("todoId") final UUID todoId) {
         toDoService.deleteToDo(todoId);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ToDoResponseDTO> getAllToDos() {
+        return toDoService.getAllToDos().stream()
+                .map(toDoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
 

@@ -6,6 +6,8 @@ import de.muenchen.refarch.repositories.ToDoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,10 +24,6 @@ public class ToDoService {
     public ToDoEntity getToDo(UUID todoId) {
         return toDoRepository.findById(todoId)
                 .orElseThrow(() -> new ToDoNotFoundException("ToDo not found with ID: " + todoId));
-    }
-
-    public Page<ToDoEntity> getAllToDos(int pageNumber, int pageSize) {
-        return toDoRepository.findAll(Pageable.ofSize(pageSize).withPage(pageNumber));
     }
 
     public ToDoEntity createToDo(ToDoEntity toDoEntity) {
@@ -48,4 +46,7 @@ public class ToDoService {
         toDoRepository.deleteById(todoId);
     }
 
+    public List<ToDoEntity> getAllToDos() {
+        return toDoRepository.findAll();
+    }
 }

@@ -76,14 +76,15 @@
 </template>
 
 <script lang="ts">
-import { fetchToDosByPriority } from "@/api/fetch-todos.ts";
+import { fetchToDosByPriority, fetchCreateToDo, fetchUpdateToDo } from "@/api/fetch-todos.ts";
 import type { ToDoResponseDTO } from "@/types/ToDo.ts";
 
 export default {
   data() {
     return {
       modal: false,
-      isUpdate: false, // Neues Datenattribut
+      isUpdate: false,
+      selectedTodoId: null,
       newTodo: {
         title: "",
         description: "",
@@ -103,14 +104,17 @@ export default {
       prioritiesOptions: ['Hoch', 'Mittel', 'Niedrig'],
     };
   },
+
   computed: {
     canSave() {
       return this.newTodo.title && (this.newTodo.deadlineDatum === "" || this.checkDateFormat(this.newTodo.deadlineDatum));
     }
   },
+
   mounted() {
     this.loadTodos();
   },
+
   methods: {
     loadTodos() {
       fetchToDosByPriority("HOCH").then((todos: ToDoResponseDTO[]) => {
@@ -125,6 +129,7 @@ export default {
         this.priorities[2].todos = todos;
       });
     },
+
     getTodoStyle(todo) {
       const today = new Date();
       const deadline = todo.deadlineDatum ? new Date(todo.deadlineDatum) : null;
@@ -139,16 +144,37 @@ export default {
         return {'border-left': '4px solid green'};
       }
     },
+
     closeModal() {
       this.modal = false;
-      // Reset nicht hier aufrufen
     },
+
     saveTodo() {
-      // Hier wird noch nichts gespeichert,
-      // modal wird nur geschlossen.
+      const todoData = {
+        title: this.newTodo.title,
+        description: this.newTodo.description,
+        priority: this.newTodo.priority.toUpperCase(),
+        deadlineDatum: this.newTodo.deadlineDatum,
+      };
+
+      if (this.isUpdate) {
+        fetchUpdateToDo(this.selectedTodoId, { ...todoData })
+            .then(() => {
+              this.loadTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Aktualisieren:", err));
+      } else {
+        fetchCreateToDo({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData })
+            .then(() => {
+              this.loadTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Erstellen:", err));
+      }
+
       this.closeModal();
-      this.resetNewTodo(); // Nur nach dem Speichern zurücksetzen
+      this.resetNewTodo();
     },
+
     resetNewTodo() {
       this.newTodo = {
         title: "",
@@ -156,41 +182,45 @@ export default {
         priority: "Niedrig",
         deadlineDatum: "",
       };
+      this.selectedTodoId = null;
     },
+
     formatDate(dateString: string) {
       if (!dateString) {
         return "keine";
       }
 
       const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');  // Sicherstellen, dass der Tag zweistellig ist
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Monat ist 0-indexiert, sicherstellen, dass er zweistellig ist
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
 
-      return `${day}.${month}.${year}`; // Format zurückgeben im Format TT.MM.JJJJ
+      return `${day}.${month}.${year}`;
     },
     logTodoDetails(todo) {
-      console.debug("ID:", todo.id); // ID in der Konsole ausgeben
+      console.debug("ID:", todo.id);
+      this.selectedTodoId = todo.id;
 
-      // Fülle die newTodo mit den Daten des gewählten ToDos
       this.newTodo.title = todo.title;
       this.newTodo.description = todo.description;
       this.newTodo.priority = todo.priority;
-      this.newTodo.deadlineDatum = this.formatDate(todo.deadlineDatum);
 
-      this.isUpdate = true; // Setze isUpdate auf true
-      console.debug("ToDo aktualisieren"); // Loggen, dass wir updaten werden
+      this.newTodo.deadlineDatum = todo.deadlineDatum ? this.formatDate(todo.deadlineDatum) : "";
 
-      // Modal öffnen
+      this.isUpdate = true;
+      console.debug("ToDo aktualisieren");
+
       this.modal = true;
     },
     addTodo() {
       console.debug("ToDo hinzufügen");
-      this.isUpdate = false; // Setze isUpdate auf false
+      this.isUpdate = false;
       this.modal = true;
+      this.resetNewTodo();
     },
+
     checkDateFormat(dateString) {
-      const regex = /^\d{2}\.\d{2}\.\d{4}$/; // TT.MM.JJJJ
+      const regex = /^\d{2}\.\d{2}\.\d{4}$/;
       return regex.test(dateString);
     }
   },

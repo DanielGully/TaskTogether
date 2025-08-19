@@ -1,10 +1,9 @@
 package de.muenchen.refarch.services;
 
+import de.muenchen.refarch.entities.Priority;
 import de.muenchen.refarch.entities.ToDoEntity;
-import de.muenchen.refarch.mapper.ToDoMapper;
 import de.muenchen.refarch.repositories.ToDoRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +13,9 @@ import java.util.UUID;
 public class ToDoService {
 
     private final ToDoRepository toDoRepository;
-    private final ToDoMapper toDoMapper;
 
-    public ToDoService(ToDoRepository toDoRepository, ToDoMapper toDoMapper) {
+    public ToDoService(ToDoRepository toDoRepository) {
         this.toDoRepository = toDoRepository;
-        this.toDoMapper = toDoMapper;
     }
 
     public ToDoEntity getToDo(UUID todoId) {
@@ -48,5 +45,9 @@ public class ToDoService {
 
     public List<ToDoEntity> getAllToDos() {
         return toDoRepository.findAll();
+    }
+
+    public List<ToDoEntity> getToDosByPriority(Priority priority) {
+        return toDoRepository.findByPriority(priority, Sort.by("deadlineDatum"));
     }
 }

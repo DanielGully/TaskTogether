@@ -1,78 +1,105 @@
 <template>
-  <div class="container">
-    <h1>Deine persönlichen ToDos</h1>
-    <button @click="openModal">ToDo hinzufügen</button>
-
-    <div class="todo-sections">
-      <div class="todo-section">
-        <h2>Hohe Priorität</h2>
-        <div class="todo-list">
-          <div
-              v-for="(todo, index) in highPriorityTodos"
-              :key="index"
-              class="todo-item"
-              :style="{'background-color': getBackgroundColor(todo)}"
-          >
-            <h3>{{ todo.title }}</h3>
-            <p>{{ todo.description }}</p>
-            <span>Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="todo-section">
-        <h2>Mittlere Priorität</h2>
-        <div class="todo-list">
-          <div
-              v-for="(todo, index) in mediumPriorityTodos"
-              :key="index"
-              class="todo-item"
-              :style="{'background-color': getBackgroundColor(todo)}"
-          >
-            <h3>{{ todo.title }}</h3>
-            <p>{{ todo.description }}</p>
-            <span>Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="todo-section">
-        <h2>Niedrige Priorität</h2>
-        <div class="todo-list">
-          <div
-              v-for="(todo, index) in lowPriorityTodos"
-              :key="index"
-              class="todo-item"
-              :style="{'background-color': getBackgroundColor(todo)}"
-          >
-            <h3>{{ todo.title }}</h3>
-            <p>{{ todo.description }}</p>
-            <span>Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
-          </div>
-        </div>
-      </div>
+  <v-container>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1>Deine persönlichen ToDos</h1>
+      <v-btn @click="addTodo" class="add-todo-button">ToDo hinzufügen</v-btn>
     </div>
+
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>
+            <span>Hohe Priorität</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="todo-list">
+              <div
+                  v-for="(todo, index) in highPriorityTodos"
+                  :key="index"
+                  class="todo-item"
+                  :style="{'border-left': '4px solid red'}"
+                  @click="logTodoDetails(todo)"
+              >
+                <span class="todo-title">{{ todo.title }}</span>
+                <span class="todo-description">{{ todo.description }}</span>
+                <span class="todo-priority">Priorität: {{ todo.priority }}</span>
+                <span class="todo-deadline">Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>
+            <span>Mittlere Priorität</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="todo-list">
+              <div
+                  v-for="(todo, index) in mediumPriorityTodos"
+                  :key="index"
+                  class="todo-item"
+                  :style="{'border-left': '4px solid orange'}"
+                  @click="logTodoDetails(todo)"
+              >
+                <span class="todo-title">{{ todo.title }}</span>
+                <span class="todo-description">{{ todo.description }}</span>
+                <span class="todo-priority">Priorität: {{ todo.priority }}</span>
+                <span class="todo-deadline">Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>
+            <span>Niedrige Priorität</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="todo-list">
+              <div
+                  v-for="(todo, index) in lowPriorityTodos"
+                  :key="index"
+                  class="todo-item"
+                  :style="{'border-left': '4px solid green'}"
+                  @click="logTodoDetails(todo)"
+              >
+                <span class="todo-title">{{ todo.title }}</span>
+                <span class="todo-description">{{ todo.description }}</span>
+                <span class="todo-priority">Priorität: {{ todo.priority }}</span>
+                <span class="todo-deadline">Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <modal v-if="modal" @close="closeModal">
       <template #header>
         <h3>ToDo hinzufügen</h3>
       </template>
       <template #body>
-        <input v-model="newTodo.title" placeholder="Titel" required />
-        <textarea v-model="newTodo.description" placeholder="Beschreibung"></textarea>
-        <select v-model="newTodo.priority" required>
-          <option value="Hoch">Hoch</option>
-          <option value="Mittel">Mittel</option>
-          <option value="Niedrig">Niedrig</option>
-        </select>
-        <input v-model="newTodo.deadlineDatum" placeholder="Fälligkeitsdatum (TT.MM.JJJJ)" />
+        <v-text-field v-model="newTodo.title" placeholder="Titel" required />
+        <v-textarea v-model="newTodo.description" placeholder="Beschreibung"></v-textarea>
+        <v-select
+            v-model="newTodo.priority"
+            :items="['Hoch', 'Mittel', 'Niedrig']"
+            required
+            label="Priorität"
+        />
+        <v-text-field v-model="newTodo.deadlineDatum" placeholder="Fälligkeitsdatum (TT.MM.JJJJ)" />
       </template>
       <template #footer>
-        <button @click="saveTodo">Speichern</button>
-        <button @click="closeModal">Abbrechen</button>
+        <v-btn @click="saveTodo">Speichern</v-btn>
+        <v-btn @click="closeModal">Abbrechen</v-btn>
       </template>
     </modal>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -153,20 +180,6 @@ export default {
         deadlineDatum: "",
       };
     },
-    getBackgroundColor(todo: ToDoResponseDTO) {
-      const currentDate = new Date();
-      if (!todo.deadlineDatum) {
-        return "green";
-      }
-      const deadlineDate = new Date(todo.deadlineDatum);
-      if (deadlineDate < currentDate) {
-        return "red";
-      } else if (deadlineDate.getMonth() === currentDate.getMonth() &&
-          deadlineDate.getFullYear() === currentDate.getFullYear()) {
-        return "yellow";
-      }
-      return "green";
-    },
     formatDate(dateString: string) {
       if (!dateString) {
         return "keine";
@@ -174,32 +187,87 @@ export default {
       const date = new Date(dateString);
       return date.toLocaleDateString("de-DE");
     },
+    logTodoDetails(todo) {
+      console.debug("Titel:", todo.title);
+      console.debug("Beschreibung:", todo.description);
+      console.debug("Priorität:", todo.priority);
+      console.debug("Deadline:", todo.deadlineDatum);
+    },
+    addTodo() { // Neue Methode für den Button
+      console.debug("ToDo hinzufügen"); // Konsolenausgabe
+      this.openModal(); // Modal öffnen
+    }
   },
 };
 </script>
 
 <style scoped>
-.container {
-  padding: 20px;
+.todo-title,
+.todo-description,
+.todo-priority,
+.todo-deadline {
+  font-size: 1.2em;
 }
-.todo-sections {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
+.add-todo-button {
+  margin-bottom: 20px;
+  transition: background-color 0.3s, transform 0.1s; /* Für Übergänge */
 }
-.todo-section {
-  margin: 15px 0;
+
+.add-todo-button:hover {
+  background-color: #f0f0f0; /* Hintergrundfarbe bei Hover */
+  cursor: pointer; /* Zeigeränderung bei Hover */
 }
+
+.add-todo-button:active {
+  transform: scale(0.98); /* Leicht verkleinern beim Klicken */
+}
+
 .todo-list {
-  display: flex;
-  flex-direction: column;
+  max-height: 400px;
+  overflow-y: auto;
 }
 .todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
-  border-radius: 5px;
-  margin: 5px 0;
+  border: 1px solid #ccc; /* Umrandung */
+  border-radius: 4px; /* Runde Ecken */
+  transition: background-color 0.3s, transform 0.1s; /* Für Übergänge */
 }
-button {
-  margin: 10px;
+
+.todo-item:hover {
+  background-color: #f0f0f0; /* Hintergrundfarbe bei Hover */
+  cursor: pointer; /* Zeigeränderung bei Hover */
+}
+
+.todo-item:active {
+  transform: scale(0.98); /* Leicht verkleinern beim Klicken */
+}
+
+.todo-title {
+  flex: 3;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.todo-description {
+  flex: 4;
+  margin: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.todo-priority,
+.todo-deadline {
+  flex: 2;
+  margin-left: 10px;
+  font-style: italic;
+  color: #666;
+}
+.todo-deadline {
+  font-style: italic;
+  color: #666;
 }
 </style>

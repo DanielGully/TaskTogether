@@ -1,10 +1,7 @@
 import {defaultResponseHandler, getConfig} from "@/api/fetch-utils.ts";
 
-/**
- * Requests a new ID from the server.
- */
-export function requestNewId(): Promise<number> {
-    return fetch("api/backend-service/todos/generate-id", getConfig())
+export function fetchToDosByPriority(priority) {
+    return fetch(`api/backend-service/todos/priority?priority=${priority}`, getConfig())
         .then((response) => {
             defaultResponseHandler(response);
             return response.json();

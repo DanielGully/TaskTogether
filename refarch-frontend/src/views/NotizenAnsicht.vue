@@ -62,7 +62,6 @@
 import type { Todo } from "@/interfaces";
 
 import TodoItem from "./TodoItem.vue";
-import {requestNewId} from "@/api/fetch-NewId.ts";
 
 export default {
   components: {
@@ -78,14 +77,6 @@ export default {
     };
   },
   methods: {
-    addTodo() {
-      requestNewId()
-        .then((value: number) => console.debug(value))
-        .catch((error) => {
-          console.debug("Error:", error); // Hier loggen wir den Fehler
-        });
-      //this.personalTodos.push({ text: "", priority: "Niedrig" });
-    },
     addGroupTodo() {
       this.groupTodos.push({ text: "", priority: "Niedrig" });
     },

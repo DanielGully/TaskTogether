@@ -17,7 +17,7 @@
                   v-for="(todo, index) in highPriorityTodos"
                   :key="index"
                   class="todo-item"
-                  :style="{'border-left': '4px solid red'}"
+                  :style="getTodoStyle(todo)"
                   @click="logTodoDetails(todo)"
               >
                 <span class="todo-title">{{ todo.title }}</span>
@@ -41,7 +41,7 @@
                   v-for="(todo, index) in mediumPriorityTodos"
                   :key="index"
                   class="todo-item"
-                  :style="{'border-left': '4px solid orange'}"
+                  :style="getTodoStyle(todo)"
                   @click="logTodoDetails(todo)"
               >
                 <span class="todo-title">{{ todo.title }}</span>
@@ -65,7 +65,7 @@
                   v-for="(todo, index) in lowPriorityTodos"
                   :key="index"
                   class="todo-item"
-                  :style="{'border-left': '4px solid green'}"
+                  :style="getTodoStyle(todo)"
                   @click="logTodoDetails(todo)"
               >
                 <span class="todo-title">{{ todo.title }}</span>
@@ -143,6 +143,20 @@ export default {
         this.lowPriorityTodos = todos;
       });
     },
+    getTodoStyle(todo) {
+      const today = new Date();
+      const deadline = todo.deadlineDatum ? new Date(todo.deadlineDatum) : null;
+
+      if (!deadline) {
+        return {'border-left': '4px solid green'};
+      } else if (deadline < today) {
+        return {'border-left': '4px solid red'};
+      } else if (deadline.getMonth() === today.getMonth() && deadline.getFullYear() === today.getFullYear()) {
+        return {'border-left': '4px solid yellow'};
+      } else {
+        return {'border-left': '4px solid green'};
+      }
+    },
     openModal() {
       this.modal = true;
     },
@@ -152,6 +166,7 @@ export default {
     },
     saveTodo() {
       const todo: ToDoResponseDTO = {
+        id: this.newTodo.id,
         title: this.newTodo.title,
         description: this.newTodo.description,
         priority: this.newTodo.priority,
@@ -178,6 +193,7 @@ export default {
         description: "",
         priority: "Niedrig",
         deadlineDatum: "",
+        id: "",
       };
     },
     formatDate(dateString: string) {
@@ -192,10 +208,11 @@ export default {
       console.debug("Beschreibung:", todo.description);
       console.debug("Priorität:", todo.priority);
       console.debug("Deadline:", todo.deadlineDatum);
+      console.debug("ID:", todo.id);
     },
-    addTodo() { // Neue Methode für den Button
-      console.debug("ToDo hinzufügen"); // Konsolenausgabe
-      this.openModal(); // Modal öffnen
+    addTodo() {
+      console.debug("ToDo hinzufügen");
+      this.openModal();
     }
   },
 };
@@ -210,16 +227,16 @@ export default {
 }
 .add-todo-button {
   margin-bottom: 20px;
-  transition: background-color 0.3s, transform 0.1s; /* Für Übergänge */
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 .add-todo-button:hover {
-  background-color: #f0f0f0; /* Hintergrundfarbe bei Hover */
-  cursor: pointer; /* Zeigeränderung bei Hover */
+  background-color: #f0f0f0;
+  cursor: pointer;
 }
 
 .add-todo-button:active {
-  transform: scale(0.98); /* Leicht verkleinern beim Klicken */
+  transform: scale(0.98);
 }
 
 .todo-list {
@@ -231,18 +248,18 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border: 1px solid #ccc; /* Umrandung */
-  border-radius: 4px; /* Runde Ecken */
-  transition: background-color 0.3s, transform 0.1s; /* Für Übergänge */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 .todo-item:hover {
-  background-color: #f0f0f0; /* Hintergrundfarbe bei Hover */
-  cursor: pointer; /* Zeigeränderung bei Hover */
+  background-color: #f0f0f0;
+  cursor: pointer;
 }
 
 .todo-item:active {
-  transform: scale(0.98); /* Leicht verkleinern beim Klicken */
+  transform: scale(0.98);
 }
 
 .todo-title {

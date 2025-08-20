@@ -50,4 +50,10 @@ public class ToDoService {
     public List<ToDoEntity> getToDosByPriority(Priority priority) {
         return toDoRepository.findByPriority(priority, Sort.by("deadlineDatum"));
     }
+
+    public List<ToDoEntity> getAllToDosSortedByDeadline() {
+        return toDoRepository.findAll(Sort.by("deadlineDatum").ascending()
+                .and(Sort.by("priority").ascending())
+                .and(Sort.by("title").ascending()));
+    }
 }

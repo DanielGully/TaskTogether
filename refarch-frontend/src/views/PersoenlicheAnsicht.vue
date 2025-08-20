@@ -148,20 +148,18 @@ export default {
       const deadline = todo.deadlineDatum ? new Date(todo.deadlineDatum) : null;
 
       if (!deadline) {
-        return {'border-left': '4px solid green'};
+        return {'border-left': '8px solid green'};
       } else if (deadline < today) {
-        return {'border-left': '4px solid red'};
+        return {'border-left': '8px solid red'};
       } else if (deadline.getMonth() === today.getMonth() && deadline.getFullYear() === today.getFullYear()) {
-        return {'border-left': '4px solid yellow'};
+        return {'border-left': '8px solid #FFA500'};
       } else {
-        return {'border-left': '4px solid green'};
+        return {'border-left': '8px solid green'};
       }
     },
-
     closeModal() {
       this.modal = false;
     },
-
     saveTodo() {
       const todoData = {
         title: this.newTodo.title,

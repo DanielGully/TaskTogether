@@ -99,5 +99,13 @@ public class ToDoController {
                 .map(toDoMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/deadline")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ToDoResponseDTO> getAllToDosByDeadline() {
+        return toDoService.getAllToDosSortedByDeadline().stream()
+                .map(toDoMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
 

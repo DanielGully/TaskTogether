@@ -52,3 +52,13 @@ export function fetchDeleteToDo(todoId) {
         });
 }
 
+export function fetchToDosByDeadline() {
+    return fetch(`api/backend-service/todos/deadline`, getConfig())
+        .then((response) => {
+            defaultResponseHandler(response);
+            return response.json();
+        })
+        .catch((err) => {
+            defaultResponseHandler(err);
+        });
+}

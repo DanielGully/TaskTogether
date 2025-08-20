@@ -26,7 +26,7 @@
                   :style="getPriorityStyle(todo.priority)"
               >Priorität: {{ todo.priority }}</span>
               <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
-              <v-btn @click.stop.prevent="deleteTodo(index)" icon>
+              <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </div>
@@ -54,9 +54,8 @@
 </template>
 
 <script lang="ts">
-import { fetchToDosByDeadline } from "@/api/fetch-todos.ts";
+import {fetchDeleteToDo, fetchToDosByDeadline} from "@/api/fetch-todos.ts";
 import type { Todo } from "@/interfaces";
-import TodoItem from "./TodoItem.vue";
 
 export default {
   data() {
@@ -81,8 +80,14 @@ export default {
     addGroupTodo() {
       this.groupTodos.push({ text: "", priority: "Niedrig" });
     },
-    deleteTodo(index: number): void {
-      //TODO
+    deleteTodo(todoId) {
+      console.debug(todoId);
+      fetchDeleteToDo(todoId)
+          .then(() => {
+            this.loadPersonalTodos();
+          })
+          .catch((err) => console.debug("Fehler beim Löschen:", err));
+
     },
     getTodoStyle(todo) {
       const today = new Date();

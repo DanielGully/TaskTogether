@@ -18,12 +18,12 @@
                   :key="index"
                   class="todo-item"
                   :style="getTodoStyle(todo)"
-                  @click="logTodoDetails(todo)"
+                  @click="editTodo(todo)"
               >
                 <span class="todo-title">{{ todo.title }}</span>
                 <span class="todo-description">{{ todo.description }}</span>
                 <span class="todo-priority">Priorität: {{ todo.priority }}</span>
-                <span class="todo-deadline">Deadline: {{ formatDate(todo.deadlineDatum) }}</span>
+                <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
               </div>
             </div>
           </v-card-text>
@@ -154,7 +154,7 @@ export default {
         title: this.newTodo.title,
         description: this.newTodo.description,
         priority: this.newTodo.priority.toUpperCase(),
-        deadlineDatum: this.newTodo.deadlineDatum,
+        deadlineDatum: this.formatDate(this.newTodo.deadlineDatum),
       };
 
       if (this.isUpdate) {
@@ -171,11 +171,6 @@ export default {
             .catch((err) => console.debug("Fehler beim Erstellen:", err));
       }
 
-      this.closeModal();
-      this.resetNewTodo();
-    },
-
-    resetNewTodo() {
       this.newTodo = {
         title: "",
         description: "",
@@ -183,40 +178,60 @@ export default {
         deadlineDatum: "",
       };
       this.selectedTodoId = null;
+      this.closeModal();
     },
 
     formatDate(dateString: string) {
       if (!dateString) {
-        return "keine";
+        return null;
       }
 
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
+      const parts = dateString.split('.');
+      if (parts.length !== 3) {
+        return "ungültiges Datum";
+      }
 
-      return `${day}.${month}.${year}`;
+      const day = parts[0].padStart(2, '0');
+      const month = parts[1].padStart(2, '0');
+      const year = parts[2];
+
+      if (isNaN(Number(day)) || isNaN(Number(month)) || isNaN(Number(year))) {
+        return "ungültiges Datum";
+      }
+
+      return `${year}-${month}-${day}`;
     },
-    logTodoDetails(todo) {
-      console.debug("ID:", todo.id);
-      this.selectedTodoId = todo.id;
 
+    editTodo(todo) {
+      this.selectedTodoId = todo.id;
       this.newTodo.title = todo.title;
       this.newTodo.description = todo.description;
       this.newTodo.priority = todo.priority;
-
-      this.newTodo.deadlineDatum = todo.deadlineDatum ? this.formatDate(todo.deadlineDatum) : "";
-
+      this.newTodo.deadlineDatum = todo.deadlineDatum ? this.formatDateForDisplay(todo.deadlineDatum) : "";
       this.isUpdate = true;
-      console.debug("ToDo aktualisieren");
-
       this.modal = true;
     },
+
     addTodo() {
-      console.debug("ToDo hinzufügen");
       this.isUpdate = false;
       this.modal = true;
-      this.resetNewTodo();
+    },
+
+    formatDateForDisplay(dateString: string) {
+      if (!dateString || dateString === "keine" || dateString === "ungültiges Datum") {
+        return "keine";
+      }
+
+      const parts = dateString.split('-');
+      if (parts.length !== 3) {
+        return "ungültiges Datum";
+      }
+
+      const year = parts[0];
+      const month = parts[1].padStart(2, '0');
+      const day = parts[2].padStart(2, '0');
+
+      return `${day}.${month}.${year}`;
     },
 
     checkDateFormat(dateString) {

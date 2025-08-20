@@ -18,12 +18,15 @@
                   :key="index"
                   class="todo-item"
                   :style="getTodoStyle(todo)"
-                  @click="editTodo(todo)"
+                  @click="logTodoId(todo.id); editTodo(todo)"
               >
                 <span class="todo-title">{{ todo.title }}</span>
                 <span class="todo-description">{{ todo.description }}</span>
                 <span class="todo-priority">Priorität: {{ todo.priority }}</span>
                 <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
+                <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
+                  <!-- Hier später das Icon einfügen -->
+                </v-btn>
               </div>
             </div>
           </v-card-text>
@@ -76,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { fetchToDosByPriority, fetchCreateToDo, fetchUpdateToDo } from "@/api/fetch-todos.ts";
+import { fetchToDosByPriority, fetchCreateToDo, fetchUpdateToDo, fetchDeleteToDo } from "@/api/fetch-todos.ts";
 import type { ToDoResponseDTO } from "@/types/ToDo.ts";
 
 export default {
@@ -128,6 +131,16 @@ export default {
       fetchToDosByPriority("NIEDRIG").then((todos: ToDoResponseDTO[]) => {
         this.priorities[2].todos = todos;
       });
+    },
+
+    deleteTodo(todoId) {
+      console.debug(todoId);
+        fetchDeleteToDo(todoId)
+            .then(() => {
+              this.loadTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Löschen:", err));
+
     },
 
     getTodoStyle(todo) {
@@ -237,6 +250,10 @@ export default {
     checkDateFormat(dateString) {
       const regex = /^\d{2}\.\d{2}\.\d{4}$/;
       return regex.test(dateString);
+    },
+
+    logTodoId(todoId) {
+      console.debug("Klicke auf ToDo mit ID:", todoId);
     }
   },
 };

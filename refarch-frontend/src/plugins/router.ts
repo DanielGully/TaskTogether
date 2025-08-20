@@ -1,7 +1,5 @@
-// Composables
 import { createRouter, createWebHashHistory } from "vue-router";
 
-// Importiere die Konstanten
 import {
   ROUTES_GETSTARTED,
   ROUTES_HOME,
@@ -15,7 +13,6 @@ import MirZugewieseneTodos from "@/views/MirZugewiesenAnsicht.vue";
 import Notizenansicht from "@/views/NotizenAnsicht.vue";
 import PersoenlicheTodos from "@/views/PersoenlicheAnsicht.vue";
 
-// Definiere die Routen
 const routes = [
   {
     path: "/",
@@ -35,18 +32,17 @@ const routes = [
   },
   {
     path: "/persoenliche-todos",
-    name: ROUTES_PERSOENLICHE_TODOS, // Konstanten für die Route hinzufügen
+    name: ROUTES_PERSOENLICHE_TODOS,
     component: PersoenlicheTodos,
   },
   {
     path: "/mir-zugewiesene-todos",
-    name: ROUTES_MIR_ZUGEWIESENE_TODOS, // Konstanten für die Route hinzufügen
+    name: ROUTES_MIR_ZUGEWIESENE_TODOS,
     component: MirZugewieseneTodos,
   },
-  { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route
+  { path: "/:catchAll(.*)*", redirect: "/" },
 ];
 
-// Erstelle den Router
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
@@ -58,5 +54,4 @@ const router = createRouter({
   },
 });
 
-// Exportiere den Router
 export default router;

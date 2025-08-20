@@ -279,7 +279,6 @@ export default {
 }
 
 .todo-list {
-  max-height: 400px;
   overflow-y: auto;
 }
 

@@ -128,7 +128,7 @@ export default {
 
 <style scoped>
 .todo-list {
-  max-height: 600px;
+  max-height: 453px;
   overflow-y: auto;
   margin-top: 16px;
 }
@@ -154,7 +154,7 @@ export default {
 }
 .todo-priority,
 .todo-deadline {
-  flex: 1;
+  flex: 2;
   margin-left: 10px;
   font-style: italic;
   color: #666;

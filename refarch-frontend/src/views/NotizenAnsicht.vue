@@ -18,18 +18,18 @@
                 :key="index"
                 class="todo-item"
                 :style="getTodoStyle(todo)"
-                @click="logTodoId(todo.id)"
+                @click="editTodo(todo)"
             >
-              <span class="todo-title">{{ todo.title }}</span>
-              <span
-                  class="todo-priority"
-                  :style="getPriorityStyle(todo.priority)"
-              >Priorität: {{ todo.priority }}</span>
-              <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
-              <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
+            <span class="todo-title">{{ todo.title }}</span>
+            <span
+                class="todo-priority"
+                :style="getPriorityStyle(todo.priority)"
+            >Priorität: {{ todo.priority }}</span>
+            <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
+            <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </div>
           </div>
         </v-card>
       </v-col>
@@ -50,11 +50,53 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="modal" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ isUpdate ? 'ToDo bearbeiten' : 'ToDo hinzufügen' }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+              v-model="newTodo.title"
+              placeholder="Titel"
+              :rules="[v => !!v || 'Titel ist erforderlich']"
+              required
+          />
+          <v-text-field
+              v-model="newTodo.description"
+              placeholder="Beschreibung"
+              type="textarea"
+              :style="{ resize: 'none', minHeight: '200px' }"
+              rows="5"
+          ></v-text-field>
+          <v-select
+              v-model="newTodo.priority"
+              :items="prioritiesOptions"
+              required
+              label="Priorität"
+          />
+          <v-text-field
+              v-model="newTodo.deadlineDatum"
+              :placeholder="'Fälligkeitsdatum (TT.MM.JJJJ)'"
+              :rules="[ v => !v || checkDateFormat(v) || 'Ungültiges Datum.' ]"
+          />
+          <div>
+            <span v-if="!newTodo.title" style="color: red;">Titel ist erforderlich.</span>
+            <span v-if="newTodo.deadlineDatum && !checkDateFormat(newTodo.deadlineDatum)" style="color: red;">Ungültiges Datum.</span>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="saveTodo" :disabled="!isFormValid()">Speichern</v-btn>
+          <v-btn @click="closeModal">Abbrechen</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
-import {fetchDeleteToDo, fetchToDosByDeadline} from "@/api/fetch-todos.ts";
+import { fetchDeleteToDo, fetchToDosByDeadline } from "@/api/fetch-todos.ts";
 import type { Todo } from "@/interfaces";
 
 export default {
@@ -62,6 +104,16 @@ export default {
     return {
       personalTodos: [] as Todo[],
       groupTodos: [] as Todo[],
+      modal: false,
+      isUpdate: false,
+      selectedTodoId: null,
+      newTodo: {
+        title: "",
+        description: "",
+        priority: "Niedrig",
+        deadlineDatum: "",
+      },
+      prioritiesOptions: ['Hoch', 'Mittel', 'Niedrig'],
     };
   },
   mounted() {
@@ -87,7 +139,28 @@ export default {
             this.loadPersonalTodos();
           })
           .catch((err) => console.debug("Fehler beim Löschen:", err));
-
+    },
+    editTodo(todo) {
+      this.selectedTodoId = todo.id;
+      this.newTodo.title = todo.title;
+      this.newTodo.description = todo.description;
+      this.newTodo.priority = todo.priority;
+      this.newTodo.deadlineDatum = todo.deadlineDatum ? this.formatDateForDisplay(todo.deadlineDatum) : "";
+      this.isUpdate = true;
+      this.modal = true;
+    },
+    saveTodo() {
+      this.closeModal();
+    },
+    resetNewTodo() {
+      this.newTodo = {
+        title: "",
+        description: "",
+        priority: "Niedrig",
+        deadlineDatum: "",
+      };
+      this.selectedTodoId = null;
+      this.isUpdate = false;
     },
     getTodoStyle(todo) {
       const today = new Date();
@@ -103,7 +176,7 @@ export default {
         return { 'border-left': '8px solid green' };
       }
     },
-    getPriorityStyle(priority: string) {
+    getPriorityStyle(priority) {
       if (priority === "HOCH") {
         return { color: 'red', fontSize: 'initial' };
       } else if (priority === "MITTEL") {
@@ -119,8 +192,20 @@ export default {
       const parts = dateString.split('-');
       return `${parts[2]}.${parts[1]}.${parts[0]}`;
     },
-    logTodoId(todoId) {
-      console.debug("Klicke auf ToDo mit ID:", todoId);
+    closeModal() {
+      this.modal = false;
+      this.resetNewTodo();
+    },
+    checkDateFormat(dateString) {
+      const regex = /^\d{2}\.\d{2}\.\d{4}$/;
+      return regex.test(dateString);
+    },
+    isFormValid() {
+      return this.newTodo.title && (this.newTodo.deadlineDatum === "" || this.checkDateFormat(this.newTodo.deadlineDatum));
+    },
+    addTodo() {
+      this.resetNewTodo();
+      this.modal = true;
     }
   },
 };
@@ -144,6 +229,9 @@ export default {
 .todo-item:hover {
   background-color: #f0f0f0;
   cursor: pointer;
+}
+.todo-item:active {
+  transform: scale(0.98);
 }
 .todo-title {
   flex: 2;

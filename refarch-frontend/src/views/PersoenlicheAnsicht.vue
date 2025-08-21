@@ -81,6 +81,7 @@
 <script lang="ts">
 import { fetchToDosByPriority, fetchCreateToDo, fetchUpdateToDo, fetchDeleteToDo } from "@/api/fetch-todos.ts";
 import type { ToDoResponseDTO } from "@/types/ToDo.ts";
+import {useUserStore} from "@/stores/user.ts";
 
 export default {
   data() {
@@ -109,6 +110,11 @@ export default {
   },
 
   computed: {
+    userId() {
+      const userStore = useUserStore();
+      return userStore.getUser?.sub;
+    },
+
     canSave() {
       return this.newTodo.title && (this.newTodo.deadlineDatum === "" || this.checkDateFormat(this.newTodo.deadlineDatum));
     }
@@ -120,27 +126,75 @@ export default {
 
   methods: {
     loadTodos() {
-      fetchToDosByPriority("HOCH").then((todos: ToDoResponseDTO[]) => {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDos können nicht geladen werden.");
+        return;
+      }
+
+      fetchToDosByPriority("HOCH", this.userId).then((todos: ToDoResponseDTO[]) => {
         this.priorities[0].todos = todos;
       });
 
-      fetchToDosByPriority("MITTEL").then((todos: ToDoResponseDTO[]) => {
+      fetchToDosByPriority("MITTEL", this.userId).then((todos: ToDoResponseDTO[]) => {
         this.priorities[1].todos = todos;
       });
 
-      fetchToDosByPriority("NIEDRIG").then((todos: ToDoResponseDTO[]) => {
+      fetchToDosByPriority("NIEDRIG", this.userId).then((todos: ToDoResponseDTO[]) => {
         this.priorities[2].todos = todos;
       });
     },
 
     deleteTodo(todoId) {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDo kann nicht gelöscht werden.");
+        return;
+      }
+
       console.debug(todoId);
-        fetchDeleteToDo(todoId)
+      fetchDeleteToDo(todoId, this.userId)
+          .then(() => {
+            this.loadTodos();
+          })
+          .catch((err) => console.debug("Fehler beim Löschen:", err));
+    },
+
+    saveTodo() {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDo kann nicht gespeichert werden.");
+        return;
+      }
+
+      const todoData = {
+        title: this.newTodo.title,
+        description: this.newTodo.description,
+        priority: this.newTodo.priority.toUpperCase(),
+        deadlineDatum: this.formatDate(this.newTodo.deadlineDatum),
+      };
+
+      const fetchMethod = this.isUpdate ? fetchUpdateToDo : fetchCreateToDo;
+
+      if (this.isUpdate) {
+        fetchMethod(this.selectedTodoId, { ...todoData }, this.userId)
             .then(() => {
               this.loadTodos();
             })
-            .catch((err) => console.debug("Fehler beim Löschen:", err));
+            .catch((err) => console.debug("Fehler beim Aktualisieren:", err));
+      } else {
+        fetchMethod({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData }, this.userId)
+            .then(() => {
+              this.loadTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Erstellen:", err));
+      }
 
+      this.newTodo = {
+        title: "",
+        description: "",
+        priority: "Niedrig",
+        deadlineDatum: "",
+      };
+      this.selectedTodoId = null;
+      this.closeModal();
     },
 
     getTodoStyle(todo) {
@@ -159,37 +213,6 @@ export default {
     },
     closeModal() {
       this.modal = false;
-    },
-    saveTodo() {
-      const todoData = {
-        title: this.newTodo.title,
-        description: this.newTodo.description,
-        priority: this.newTodo.priority.toUpperCase(),
-        deadlineDatum: this.formatDate(this.newTodo.deadlineDatum),
-      };
-
-      if (this.isUpdate) {
-        fetchUpdateToDo(this.selectedTodoId, { ...todoData })
-            .then(() => {
-              this.loadTodos();
-            })
-            .catch((err) => console.debug("Fehler beim Aktualisieren:", err));
-      } else {
-        fetchCreateToDo({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData })
-            .then(() => {
-              this.loadTodos();
-            })
-            .catch((err) => console.debug("Fehler beim Erstellen:", err));
-      }
-
-      this.newTodo = {
-        title: "",
-        description: "",
-        priority: "Niedrig",
-        deadlineDatum: "",
-      };
-      this.selectedTodoId = null;
-      this.closeModal();
     },
 
     formatDate(dateString: string) {

@@ -4,6 +4,7 @@ import de.muenchen.refarch.entities.Priority;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.UUID;
 
 import java.time.LocalDate;
 
@@ -20,4 +21,6 @@ public class ToDoRequestDTO {
 
     private LocalDate deadlineDatum;
 
+    @NotNull
+    private UUID userId;
 }

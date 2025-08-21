@@ -1,7 +1,7 @@
 import {defaultResponseHandler, deleteConfig, getConfig, postConfig, putConfig} from "@/api/fetch-utils.ts";
 
-export function fetchToDosByPriority(priority) {
-    return fetch(`api/backend-service/todos/priority?priority=${priority}`, getConfig())
+export function fetchToDosByPriority(priority, userId) {
+    return fetch(`api/backend-service/todos/priority?priority=${priority}&userId=${userId}`, getConfig())
         .then((response) => {
             defaultResponseHandler(response);
             return response.json();
@@ -11,8 +11,8 @@ export function fetchToDosByPriority(priority) {
         });
 }
 
-export function fetchCreateToDo(toDoRequestDTO) {
-    return fetch(`api/backend-service/todos`, postConfig(toDoRequestDTO))
+export function fetchCreateToDo(toDoRequestDTO, userId) {
+    return fetch(`api/backend-service/todos?userId=${userId}`, postConfig(toDoRequestDTO))
         .then((response) => {
             defaultResponseHandler(response);
             return response.json();
@@ -22,8 +22,8 @@ export function fetchCreateToDo(toDoRequestDTO) {
         });
 }
 
-export function fetchUpdateToDo(todoId, toDoRequestDTO) {
-    return fetch(`api/backend-service/todos/${todoId}`, putConfig(toDoRequestDTO))
+export function fetchUpdateToDo(todoId, toDoRequestDTO, userId) {
+    return fetch(`api/backend-service/todos/${todoId}?userId=${userId}`, putConfig(toDoRequestDTO))
         .then((response) => {
             defaultResponseHandler(response);
             return response.json();
@@ -33,8 +33,8 @@ export function fetchUpdateToDo(todoId, toDoRequestDTO) {
         });
 }
 
-export function fetchDeleteToDo(todoId) {
-    return fetch(`api/backend-service/todos/${todoId}`, deleteConfig())
+export function fetchDeleteToDo(todoId, userId) {
+    return fetch(`api/backend-service/todos/${todoId}?userId=${userId}`, deleteConfig())
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Fehler beim Löschen des ToDos: " + response.statusText);
@@ -52,8 +52,8 @@ export function fetchDeleteToDo(todoId) {
         });
 }
 
-export function fetchToDosByDeadline() {
-    return fetch(`api/backend-service/todos/deadline`, getConfig())
+export function fetchToDosByDeadline(userId) {
+    return fetch(`api/backend-service/todos/sorted?userId=${userId}`, getConfig())
         .then((response) => {
             defaultResponseHandler(response);
             return response.json();

@@ -3,109 +3,55 @@ package de.muenchen.refarch.controller;
 import de.muenchen.refarch.entities.Priority;
 import de.muenchen.refarch.entities.dto.ToDoRequestDTO;
 import de.muenchen.refarch.entities.dto.ToDoResponseDTO;
-import de.muenchen.refarch.mapper.ToDoMapper;
 import de.muenchen.refarch.services.ToDoService;
-import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Slf4j
-@RequiredArgsConstructor
-@RequestMapping("todos")
+@RequestMapping("/todos")
 public class ToDoController {
-
     private final ToDoService toDoService;
-    private final ToDoMapper toDoMapper;
 
-    /**
-     * Retrieve a todoEntity by its UUID.
-     * Fetches the todoEntity details using the provided UUID.
-     *
-     * @param todoId the UUID of the requested todoEntity
-     * @return the todoEntity with the given UID as a DTO
-     */
-    @GetMapping("{todoId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ToDoResponseDTO getToDo(@PathVariable("todoId") final UUID todoId) {
-        return toDoMapper.toDTO(toDoService.getToDo(todoId));
+    public ToDoController(ToDoService toDoService) {
+        this.toDoService = toDoService;
     }
 
-    /**
-     * Create a new todoEntity.
-     * Creates a new todoEntity using the provided todoEntity details.
-     *
-     * @param toDoRequestDTO the details of the todoEntity to create
-     * @return the created todoEntity as a DTO
-     */
+    @GetMapping("/{todoId}")
+    public ResponseEntity<ToDoResponseDTO> getToDo(@PathVariable UUID todoId, @RequestParam UUID userId) {
+        ToDoResponseDTO todo = toDoService.getToDo(todoId, userId);
+        return ResponseEntity.ok(todo);
+    }
+
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ToDoResponseDTO saveToDo(@Valid @RequestBody final ToDoRequestDTO toDoRequestDTO) {
-        return toDoMapper.toDTO(toDoService.createToDo(toDoMapper.toEntity(toDoRequestDTO)));
+    public ResponseEntity<ToDoResponseDTO> createToDo(@RequestBody ToDoRequestDTO request, @RequestParam UUID userId) {
+        ToDoResponseDTO createdToDo = toDoService.createToDo(request, userId);
+        return ResponseEntity.ok(createdToDo);
     }
 
-    /**
-     * Update an existing todoEntity.
-     * Updates the details of an existing todoEntity using the provided UUID and todoEntity details.
-     *
-     * @param toDoRequestDTO the new details of the todoEntity
-     * @param todoId the UUID of the todoEntity to update
-     * @return the updated todoEntity as a DTO
-     */
     @PutMapping("/{todoId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ToDoResponseDTO updateToDo(@Valid @RequestBody final ToDoRequestDTO toDoRequestDTO,
-                                      @PathVariable("todoId") final UUID todoId) {
-        return toDoMapper.toDTO(toDoService.updateToDo(toDoMapper.toEntity(toDoRequestDTO), todoId));
+    public ResponseEntity<ToDoResponseDTO> updateToDo(@PathVariable UUID todoId, @RequestBody ToDoRequestDTO request, @RequestParam UUID userId) {
+        ToDoResponseDTO updatedToDo = toDoService.updateToDo(request, todoId, userId);
+        return ResponseEntity.ok(updatedToDo);
     }
 
-    /**
-     * Delete a todoEntity.
-     * Deletes the todoEntity using the provided UUID.
-     *
-     * @param todoId the UUID of the todoEntity to delete
-     */
     @DeleteMapping("/{todoId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteToDo(@PathVariable("todoId") final UUID todoId) {
-        toDoService.deleteToDo(todoId);
+    public ResponseEntity<Void> deleteToDo(@PathVariable UUID todoId, @RequestParam UUID userId) {
+        toDoService.deleteToDo(todoId, userId);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ToDoResponseDTO> getAllToDos() {
-        return toDoService.getAllToDos().stream()
-                .map(toDoMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Retrieve all todoEntities by priority and sorted by deadline.
-     *
-     * @param priority the priority of the todoEntities to retrieve
-     * @return the list of todoEntities filtered by priority and sorted by deadline
-     */
     @GetMapping("/priority")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ToDoResponseDTO> getToDosByPriority(@RequestParam Priority priority) {
-        return toDoService.getToDosByPriority(priority).stream()
-                .map(toDoMapper::toDTO)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<ToDoResponseDTO>> getToDosByPriority(@RequestParam Priority priority, @RequestParam UUID userId) {
+        List<ToDoResponseDTO> todos = toDoService.getToDosByPriority(priority, userId);
+        return ResponseEntity.ok(todos);
     }
 
-    @GetMapping("/deadline")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ToDoResponseDTO> getAllToDosByDeadline() {
-        return toDoService.getAllToDosSortedByDeadline().stream()
-                .map(toDoMapper::toDTO)
-                .collect(Collectors.toList());
+    @GetMapping("/sorted")
+    public ResponseEntity<List<ToDoResponseDTO>> getAllToDosSortedByDeadline(@RequestParam UUID userId) {
+        List<ToDoResponseDTO> todos = toDoService.getAllToDosSortedByDeadline(userId);
+        return ResponseEntity.ok(todos);
     }
 }
-

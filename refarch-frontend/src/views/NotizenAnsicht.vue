@@ -118,6 +118,14 @@ export default defineComponent({
       prioritiesOptions: ['Hoch', 'Mittel', 'Niedrig'],
     };
   },
+
+  computed: {
+    userId() {
+      const userStore = useUserStore();
+      return userStore.getUser?.sub;
+    }
+  },
+
   mounted() {
     const user = useUserStore().getUser;
     if(user != null){
@@ -130,7 +138,11 @@ export default defineComponent({
   },
   methods: {
     loadPersonalTodos() {
-      fetchToDosByDeadline()
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDos können nicht geladen werden.");
+        return;
+      }
+      fetchToDosByDeadline(this.userId)
           .then((todos) => {
             this.personalTodos = todos;
           })
@@ -142,8 +154,13 @@ export default defineComponent({
       this.groupTodos.push({ text: "", priority: "Niedrig" });
     },
     deleteTodo(todoId) {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDo kann nicht gelöscht werden.");
+        return;
+      }
+
       console.debug(todoId);
-      fetchDeleteToDo(todoId)
+      fetchDeleteToDo(todoId, this.userId)
           .then(() => {
             this.loadPersonalTodos();
           })
@@ -179,6 +196,11 @@ export default defineComponent({
       return `${year}-${month}-${day}`;
     },
     saveTodo() {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, ToDo kann nicht gespeichert werden.");
+        return;
+      }
+
       const todoData = {
         title: this.newTodo.title,
         description: this.newTodo.description,
@@ -186,14 +208,16 @@ export default defineComponent({
         deadlineDatum: this.formatDate(this.newTodo.deadlineDatum),
       };
 
+      const fetchMethod = this.isUpdate ? fetchUpdateToDo : fetchCreateToDo;
+
       if (this.isUpdate) {
-        fetchUpdateToDo(this.selectedTodoId, { ...todoData })
+        fetchMethod(this.selectedTodoId, { ...todoData }, this.userId)
             .then(() => {
               this.loadPersonalTodos();
             })
             .catch((err) => console.debug("Fehler beim Aktualisieren:", err));
       } else {
-        fetchCreateToDo({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData })
+        fetchMethod({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData }, this.userId)
             .then(() => {
               this.loadPersonalTodos();
             })

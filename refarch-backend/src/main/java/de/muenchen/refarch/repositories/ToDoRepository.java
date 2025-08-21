@@ -9,5 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ToDoRepository extends JpaRepository<ToDoEntity, UUID> {
-    List<ToDoEntity> findByPriority(Priority priority, Sort sort);
+    List<ToDoEntity> findByUserId(UUID userId, Sort sort);
+
+    List<ToDoEntity> findByPriorityAndUserId(Priority priority, UUID userId, Sort deadlineDatum);
 }

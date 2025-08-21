@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,4 +36,8 @@ public class ToDoEntity extends BaseEntity {
 
     @Column(name = "deadline_date")
     private LocalDate deadlineDatum;
+
+    @Column(nullable = false)
+    @NotNull
+    private UUID userId;
 }

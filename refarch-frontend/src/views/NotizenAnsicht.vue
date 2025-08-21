@@ -20,16 +20,16 @@
                 :style="getTodoStyle(todo)"
                 @click="editTodo(todo)"
             >
-            <span class="todo-title">{{ todo.title }}</span>
-            <span
-                class="todo-priority"
-                :style="getPriorityStyle(todo.priority)"
-            >Priorität: {{ todo.priority }}</span>
-            <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
-            <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
+              <span class="todo-title">{{ todo.title }}</span>
+              <span
+                  class="todo-priority"
+                  :style="getPriorityStyle(todo.priority)"
+              >Priorität: {{ todo.priority }}</span>
+              <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
+              <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </div>
           </div>
         </v-card>
       </v-col>
@@ -96,10 +96,12 @@
 </template>
 
 <script lang="ts">
-import {fetchCreateToDo, fetchDeleteToDo, fetchToDosByDeadline, fetchUpdateToDo} from "@/api/fetch-todos.ts";
+import { defineComponent } from 'vue';
+import { fetchCreateToDo, fetchDeleteToDo, fetchToDosByDeadline, fetchUpdateToDo } from "@/api/fetch-todos.ts";
 import type { Todo } from "@/interfaces";
+import {useUserStore} from "@/stores/user.ts";
 
-export default {
+export default defineComponent({
   data() {
     return {
       personalTodos: [] as Todo[],
@@ -117,6 +119,13 @@ export default {
     };
   },
   mounted() {
+    const user = useUserStore().getUser;
+    if(user != null){
+      console.debug(user.sub);
+    }
+    else{
+      console.debug("User noch nicht geladen.");
+    }
     this.loadPersonalTodos();
   },
   methods: {
@@ -256,7 +265,7 @@ export default {
       this.modal = true;
     }
   },
-};
+});
 </script>
 
 <style scoped>

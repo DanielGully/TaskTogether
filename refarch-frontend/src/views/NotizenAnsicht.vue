@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { fetchDeleteToDo, fetchToDosByDeadline } from "@/api/fetch-todos.ts";
+import {fetchCreateToDo, fetchDeleteToDo, fetchToDosByDeadline, fetchUpdateToDo} from "@/api/fetch-todos.ts";
 import type { Todo } from "@/interfaces";
 
 export default {
@@ -149,7 +149,55 @@ export default {
       this.isUpdate = true;
       this.modal = true;
     },
+    formatDate(dateString: string) {
+      if (!dateString) {
+        return null;
+      }
+
+      const parts = dateString.split('.');
+      if (parts.length !== 3) {
+        return "ungültiges Datum";
+      }
+
+      const day = parts[0].padStart(2, '0');
+      const month = parts[1].padStart(2, '0');
+      const year = parts[2];
+
+      if (isNaN(Number(day)) || isNaN(Number(month)) || isNaN(Number(year))) {
+        return "ungültiges Datum";
+      }
+
+      return `${year}-${month}-${day}`;
+    },
     saveTodo() {
+      const todoData = {
+        title: this.newTodo.title,
+        description: this.newTodo.description,
+        priority: this.newTodo.priority.toUpperCase(),
+        deadlineDatum: this.formatDate(this.newTodo.deadlineDatum),
+      };
+
+      if (this.isUpdate) {
+        fetchUpdateToDo(this.selectedTodoId, { ...todoData })
+            .then(() => {
+              this.loadPersonalTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Aktualisieren:", err));
+      } else {
+        fetchCreateToDo({ id: "97b0690c-d647-4958-bf2f-cf18d84dc59d", ...todoData })
+            .then(() => {
+              this.loadPersonalTodos();
+            })
+            .catch((err) => console.debug("Fehler beim Erstellen:", err));
+      }
+
+      this.newTodo = {
+        title: "",
+        description: "",
+        priority: "Niedrig",
+        deadlineDatum: "",
+      };
+      this.selectedTodoId = null;
       this.closeModal();
     },
     resetNewTodo() {

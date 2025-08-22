@@ -13,6 +13,4 @@ public interface ToDoMapper {
     ToDoEntity toEntity(ToDoRequestDTO toDoRequestDTO);
 
     ToDoResponseDTO toDTO(ToDoEntity toDoEntity);
-
-    ToDoEntity toEntity(ToDoResponseDTO toDoResponseDTO);
 }

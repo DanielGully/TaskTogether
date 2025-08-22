@@ -121,10 +121,21 @@ export default {
   },
 
   mounted() {
-    this.loadTodos();
+    this.tryLoadTodos();
   },
 
   methods: {
+    tryLoadTodos() {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, versuche es erneut...");
+        setTimeout(() => {
+          this.tryLoadTodos();
+        }, 500);
+      } else {
+        this.loadTodos();
+      }
+    },
+
     loadTodos() {
       if (!this.userId) {
         console.debug("User ID ist nicht vorhanden, ToDos können nicht geladen werden.");

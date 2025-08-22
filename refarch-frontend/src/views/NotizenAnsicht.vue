@@ -128,13 +128,12 @@ export default defineComponent({
 
   mounted() {
     const user = useUserStore().getUser;
-    if(user != null){
+    if(user != null) {
       console.debug(user.sub);
-    }
-    else{
+    } else {
       console.debug("User noch nicht geladen.");
     }
-    this.loadPersonalTodos();
+    this.tryLoadPersonalTodos();
   },
   methods: {
     loadPersonalTodos() {
@@ -149,6 +148,16 @@ export default defineComponent({
           .catch((err) => {
             console.debug("Fehler beim Abrufen der persönlichen ToDos:", err);
           });
+    },
+    tryLoadPersonalTodos() {
+      if (!this.userId) {
+        console.debug("User ID ist nicht vorhanden, versuche es erneut...");
+        setTimeout(() => {
+          this.tryLoadPersonalTodos();
+        }, 500);
+      } else {
+        this.loadPersonalTodos();
+      }
     },
     addGroupTodo() {
       this.groupTodos.push({ text: "", priority: "Niedrig" });

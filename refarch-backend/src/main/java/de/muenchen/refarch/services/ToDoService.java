@@ -4,6 +4,7 @@ import de.muenchen.refarch.entities.Priority;
 import de.muenchen.refarch.entities.ToDoEntity;
 import de.muenchen.refarch.entities.dto.ToDoRequestDTO;
 import de.muenchen.refarch.entities.dto.ToDoResponseDTO;
+import de.muenchen.refarch.exception.ToDoNotFoundException;
 import de.muenchen.refarch.mapper.ToDoMapper;
 import de.muenchen.refarch.repositories.ToDoRepository;
 import org.springframework.data.domain.Sort;
@@ -31,6 +32,9 @@ public class ToDoService {
     }
 
     public ToDoResponseDTO createToDo(ToDoRequestDTO request, UUID userId) {
+        if (request.getTitle() == null || request.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title must not be null or empty.");
+        }
         ToDoEntity toDoEntity = toDoMapper.toEntity(request);
         toDoEntity.setUserId(userId);
         ToDoEntity createdToDo = toDoRepository.save(toDoEntity);

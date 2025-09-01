@@ -4,6 +4,7 @@ import de.muenchen.refarch.entities.Priority;
 import de.muenchen.refarch.entities.ToDoEntity;
 import de.muenchen.refarch.entities.dto.ToDoRequestDTO;
 import de.muenchen.refarch.entities.dto.ToDoResponseDTO;
+import de.muenchen.refarch.exception.ToDoNotFoundException;
 import de.muenchen.refarch.mapper.ToDoMapper;
 import de.muenchen.refarch.repositories.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;

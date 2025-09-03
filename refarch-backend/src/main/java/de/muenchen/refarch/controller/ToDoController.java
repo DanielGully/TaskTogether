@@ -3,8 +3,10 @@ package de.muenchen.refarch.controller;
 import de.muenchen.refarch.entities.Priority;
 import de.muenchen.refarch.entities.dto.ToDoRequestDTO;
 import de.muenchen.refarch.entities.dto.ToDoResponseDTO;
+import de.muenchen.refarch.security.Authorities;
 import de.muenchen.refarch.services.ToDoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +54,13 @@ public class ToDoController {
     @GetMapping("/sorted")
     public ResponseEntity<List<ToDoResponseDTO>> getAllToDosSortedByDeadline(@RequestParam UUID userId) {
         List<ToDoResponseDTO> todos = toDoService.getAllToDosSortedByDeadline(userId);
+        return ResponseEntity.ok(todos);
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize(Authorities.ADMIN_GET_ALL)
+    public ResponseEntity<List<ToDoResponseDTO>> getAllToDosForAdmin() {
+        List<ToDoResponseDTO> todos = toDoService.getAllToDosForAdmin();
         return ResponseEntity.ok(todos);
     }
 }

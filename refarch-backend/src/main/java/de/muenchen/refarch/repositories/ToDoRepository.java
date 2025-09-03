@@ -12,4 +12,6 @@ public interface ToDoRepository extends JpaRepository<ToDoEntity, UUID> {
     List<ToDoEntity> findByUserId(UUID userId, Sort sort);
 
     List<ToDoEntity> findByPriorityAndUserId(Priority priority, UUID userId, Sort deadlineDatum);
+
+    List<ToDoEntity> findAll(Sort sort);
 }

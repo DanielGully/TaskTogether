@@ -78,4 +78,13 @@ public class ToDoService {
                 .map(toDoMapper::toDTO)
                 .toList();
     }
+
+    public List<ToDoResponseDTO> getAllToDosForAdmin() {
+        List<ToDoEntity> todos = toDoRepository.findAll(Sort.by("userId").ascending()
+                .and(Sort.by("deadlineDatum").ascending())
+                .and(Sort.by("priority").ascending()));
+        return todos.stream()
+                .map(toDoMapper::toDTO)
+                .toList();
+    }
 }

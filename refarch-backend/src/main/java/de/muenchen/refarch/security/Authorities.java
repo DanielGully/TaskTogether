@@ -15,6 +15,7 @@ public final class Authorities {
     public static final String THEENTITY_CREATE = "hasAnyRole('writer')";
     public static final String THEENTITY_UPDATE = "hasAnyRole('writer')";
     public static final String THEENTITY_DELETE = "hasAnyRole('writer')";
+    public static final String ADMIN_GET_ALL = "hasAnyRole('admin')";
 
     // Permissions based auth
     // public static final String THEENTITY_GET = "hasAuthority('REFARCH_THEENTITY_READ')";

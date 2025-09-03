@@ -306,7 +306,7 @@ export default defineComponent({
 
 <style scoped>
 .todo-list {
-  max-height: 453px;
+  max-height: 600px;
   overflow-y: auto;
   margin-top: 16px;
 }

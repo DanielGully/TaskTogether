@@ -25,7 +25,7 @@
                 <span class="todo-priority">Priorität: {{ todo.priority }}</span>
                 <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
                 <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
-                  <!-- Hier später das Icon einfügen -->
+                  <img :src="deleteIcon" alt="Delete" style="width: 24px; height: 24px;" />
                 </v-btn>
               </div>
             </div>
@@ -82,6 +82,8 @@
 import { fetchToDosByPriority, fetchCreateToDo, fetchUpdateToDo, fetchDeleteToDo } from "@/api/fetch-todos.ts";
 import type { ToDoResponseDTO } from "@/types/ToDo.ts";
 import {useUserStore} from "@/stores/user.ts";
+import deleteIcon from '@/assets/bin.png';
+
 
 export default {
   data() {
@@ -106,6 +108,7 @@ export default {
         { label: 'Niedrige Priorität', todos: [] }
       ],
       prioritiesOptions: ['Hoch', 'Mittel', 'Niedrig'],
+      deleteIcon: deleteIcon,
     };
   },
 

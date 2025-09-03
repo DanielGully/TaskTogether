@@ -27,7 +27,7 @@
               >Priorität: {{ todo.priority }}</span>
               <span class="todo-deadline">Deadline: {{ formatDateForDisplay(todo.deadlineDatum) }}</span>
               <v-btn @click.stop.prevent="deleteTodo(todo.id)" icon>
-                <v-icon>mdi-delete</v-icon>
+                <img :src="deleteIcon" alt="Delete" style="width: 24px; height: 24px;" />
               </v-btn>
             </div>
           </div>
@@ -100,6 +100,8 @@ import { defineComponent } from 'vue';
 import { fetchCreateToDo, fetchDeleteToDo, fetchToDosByDeadline, fetchUpdateToDo } from "@/api/fetch-todos.ts";
 import type { Todo } from "@/interfaces";
 import {useUserStore} from "@/stores/user.ts";
+import deleteIcon from '@/assets/bin.png';
+
 
 export default defineComponent({
   data() {
@@ -116,6 +118,7 @@ export default defineComponent({
         deadlineDatum: "",
       },
       prioritiesOptions: ['Hoch', 'Mittel', 'Niedrig'],
+      deleteIcon: deleteIcon,
     };
   },
 

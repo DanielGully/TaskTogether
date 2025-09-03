@@ -70,8 +70,8 @@
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="saveTodo" :disabled="!canSave">Speichern</v-btn>
           <v-btn @click="closeModal">Abbrechen</v-btn>
+          <v-btn @click="saveTodo" :disabled="!canSave">Speichern</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

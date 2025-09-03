@@ -62,3 +62,14 @@ export function fetchToDosByDeadline(userId) {
             defaultResponseHandler(err);
         });
 }
+
+export function fetchAllToDosForAdmin() {
+    return fetch(`api/backend-service/todos/admin`, getConfig())
+        .then((response) => {
+            defaultResponseHandler(response);
+            return response.json();
+        })
+        .catch((err) => {
+            defaultResponseHandler(err);
+        });
+}

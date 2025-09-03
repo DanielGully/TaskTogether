@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import {
+  ROUTES_ADMINVIEW,
   ROUTES_GETSTARTED,
   ROUTES_HOME,
   ROUTES_MIR_ZUGEWIESENE_TODOS,
@@ -12,6 +13,7 @@ import HomeView from "@/views/HomeView.vue";
 import MirZugewieseneTodos from "@/views/MirZugewiesenAnsicht.vue";
 import Notizenansicht from "@/views/NotizenAnsicht.vue";
 import PersoenlicheTodos from "@/views/PersoenlicheAnsicht.vue";
+import AdminView from "@/views/AdminView.vue";
 
 const routes = [
   {
@@ -39,6 +41,11 @@ const routes = [
     path: "/mir-zugewiesene-todos",
     name: ROUTES_MIR_ZUGEWIESENE_TODOS,
     component: MirZugewieseneTodos,
+  },
+  {
+    path: "/adminview",
+    name: ROUTES_ADMINVIEW,
+    component: AdminView,
   },
   { path: "/:catchAll(.*)*", redirect: "/" },
 ];

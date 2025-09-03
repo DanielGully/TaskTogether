@@ -19,6 +19,7 @@ vi.mock('@/api/fetch-todos.ts', () => ({
     fetchToDosByPriority: vi.fn().mockResolvedValue([]),
     fetchCreateToDo: vi.fn().mockResolvedValue({}),
     fetchDeleteToDo: vi.fn().mockResolvedValue({}),
+    fetchUpdateToDo: vi.fn().mockResolvedValue({}),
 }));
 
 describe("PersoenlicheAnsicht.vue", () => {
@@ -28,7 +29,6 @@ describe("PersoenlicheAnsicht.vue", () => {
     beforeEach(() => {
         setActivePinia(pinia);
         userStore = useUserStore();
-
         userStore.setUser({ sub: 'mocked-user-id' });
 
         wrapper = shallowMount(PersoenlicheAnsicht, {
@@ -47,7 +47,9 @@ describe("PersoenlicheAnsicht.vue", () => {
         fetchToDosByPriority.mockResolvedValueOnce(todos);
 
         await wrapper.vm.loadTodos();
+        await wrapper.vm.$nextTick();
 
+        expect(wrapper.vm.priorities[0].todos.length).toBe(2);
         expect(wrapper.vm.priorities[0].todos).toEqual(todos);
     });
 
@@ -90,5 +92,17 @@ describe("PersoenlicheAnsicht.vue", () => {
 
     test("formats date for display correctly with invalid input", () => {
         expect(wrapper.vm.formatDateForDisplay('invalid date')).toBe('ungültiges Datum');
+    });
+
+    test("edits an existing todo", async () => {
+        const todoId = 1;
+        const updatedTodo = { title: 'Updated Todo', description: 'Updated Description', priority: 'Hoch', deadlineDatum: '2023-10-05' };
+
+        wrapper.vm.todos = [{ id: todoId, ...updatedTodo }];
+        wrapper.vm.editTodo = { ...updatedTodo };
+
+        await wrapper.vm.saveTodo();
+
+        expect(wrapper.vm.todos.find(todo => todo.id === todoId).title).toBe('Updated Todo');
     });
 });

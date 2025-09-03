@@ -32,3 +32,13 @@ changes:
   - updateUserPassword:
       name: writer
       password: "writer"
+  - addUser:
+      name: Admin
+      lastName: Admin
+      firstName: Admin
+      enabled: true
+      emailVerified: true
+      email: Admin@Admin.com
+  - updateUserPassword:
+      name: Admin
+      password: "Admin"

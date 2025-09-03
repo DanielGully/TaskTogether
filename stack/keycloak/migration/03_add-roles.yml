@@ -15,3 +15,10 @@ changes:
       clientRole: true
       clientId: local
       composite: false
+
+  - addRole:
+      name: admin
+      description: Role with full access to application data and administrative privileges
+      clientRole: true
+      clientId: local
+      composite: false

@@ -38,14 +38,14 @@
           variant="text"
           @click="no"
         >
-          {{ "common.no" }}
+          {{ "Nein" }}
         </v-btn>
         <v-btn
           id="yesnodialog-btn-yes"
           color="primary"
           @click="yes"
         >
-          {{ "common.yes" }}
+          {{ "Ja" }}
         </v-btn>
       </v-card-actions>
     </v-card>

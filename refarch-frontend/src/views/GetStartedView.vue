@@ -3,16 +3,16 @@
     <v-row class="text-center">
       <v-col>
         <h1 class="text-h3 font-weight-bold mb-10">
-          {{ "views.getStarted.docsHeader" }}
+          {{ "Dokumentation" }}
         </h1>
-        <h3>{{ "views.getStarted.docsSubtext" }}</h3>
+        <h3>{{ "Weiterführende Links sind hier zu finden:" }}</h3>
         <div>
           <a
             href="https://refarch.oss.muenchen.de/templates"
             target="_blank"
             rel="noopener noreferrer"
             @click="documentationClicked = true"
-            >{{ "views.getStarted.docsLinks.templates" }}</a
+            >{{ "Dokumentation RefArch-Templates" }}</a
           >
         </div>
         <div>
@@ -21,15 +21,15 @@
             target="_blank"
             rel="noopener noreferrer"
             @click="documentationClicked = true"
-            >{{ "views.getStarted.docsLinks.main" }}</a
+            >{{ "Dokumentation RefArch" }}</a
           >
         </div>
       </v-col>
     </v-row>
     <yes-no-dialog
       v-model="saveLeaveDialog"
-      :dialogtitle="'views.getStarted.saveLeave.title'"
-      :dialogtext="'views.getStarted.saveLeave.text'"
+      :dialogtitle="'Wirklich verlassen?'"
+      :dialogtext="'Wollen Sie wirklich nicht die Dokumentation anschauen?'"
       @no="cancel"
       @yes="leave"
     />

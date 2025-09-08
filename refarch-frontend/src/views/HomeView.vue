@@ -11,10 +11,10 @@
 
       <v-col class="mb-4">
         <h1 class="text-h3 font-weight-bold mb-3">
-          {{ "views.home.header" }}
+          {{ "Willkommen bei TaskTogether von it@M" }}
         </h1>
         <p>
-          {{ "views.home.apiGatewayStatus" }}
+          {{ "Das API-Gateway ist:" }}
           <span :class="status">{{ status }}</span>
         </p>
       </v-col>

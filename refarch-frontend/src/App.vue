@@ -3,10 +3,7 @@
     <the-snackbar />
     <v-app-bar color="primary">
       <v-row align="center">
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-start"
-        >
+        <v-col cols="3" class="d-flex align-center justify-start">
           <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
           <router-link to="/">
             <v-toolbar-title class="font-weight-bold">
@@ -16,40 +13,30 @@
             </v-toolbar-title>
           </router-link>
         </v-col>
-        <v-col
-          cols="6"
-          class="d-flex align-center justify-center"
-        >
+        <v-col cols="6" class="d-flex align-center justify-center">
           <p class="text-h4">{{ "Willkommen" }}</p>
         </v-col>
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-end"
-        >
+        <v-col cols="3" class="d-flex align-center justify-end">
           <app-switcher
-            v-if="appswitcherBaseUrl"
-            :base-url="appswitcherBaseUrl"
-            :tags="['global']"
-            :icon="mdiApps"
+              v-if="appswitcherBaseUrl"
+              :base-url="appswitcherBaseUrl"
+              :tags="['global']"
+              :icon="mdiApps"
           />
-          <v-btn
-            variant="text"
-            icon
-          >
+          <v-btn variant="text" icon>
             <ad2-image-avatar
-              v-if="userStore.getUser !== null"
-              :username="userStore.getUser.username"
+                v-if="userStore.getUser !== null"
+                :username="userStore.getUser.username"
             />
           </v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
+
+    <v-navigation-drawer v-model="drawer" v-if="!isAdmin">
       <v-list>
         <v-list-item :to="{ name: ROUTES_GETSTARTED }">
-          <v-list-item-title>
-            {{ "First Steps" }}
-          </v-list-item-title>
+          <v-list-item-title>{{ "First Steps" }}</v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: ROUTES_NOTIZENANSICHT }">
           <v-list-item-title> Übersicht </v-list-item-title>
@@ -62,6 +49,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
     <v-main>
       <v-container fluid>
         <router-view v-slot="{ Component }">
@@ -78,7 +66,7 @@
 import { mdiApps } from "@mdi/js";
 import { AppSwitcher } from "@muenchen/appswitcher-vue";
 import { useToggle } from "@vueuse/core";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 import { getUser } from "@/api/user-client";
 import Ad2ImageAvatar from "@/components/common/Ad2ImageAvatar.vue";
@@ -97,24 +85,31 @@ const appswitcherBaseUrl = APPSWITCHER_URL;
 
 const userStore = useUserStore();
 const [drawer, toggleDrawer] = useToggle();
+const isAdmin = ref(false);
 
 onMounted(() => {
   loadUser();
 });
 
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
 function loadUser(): void {
   getUser()
-    .then((user: User) => userStore.setUser(user))
-    .catch(() => {
-      // No user info received, so fallback
-      if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
-      } else {
-        userStore.setUser(null);
-      }
-    });
+      .then((user: User) => {
+        console.debug("API-Antwort:", user);
+        userStore.setUser(user);
+
+        const userRoles = user.authorities || [];
+        console.debug("Benutzerrollen:", userRoles);
+        isAdmin.value = userRoles.includes("ROLE_admin");
+
+        console.debug("Is Admin:", isAdmin.value);
+      })
+      .catch((error) => {
+        console.debug("Fehler beim Laden des Benutzers:", error);
+        if (import.meta.env.DEV) {
+          userStore.setUser(UserLocalDevelopment());
+        } else {
+          userStore.setUser(null);
+        }
+      });
 }
 </script>

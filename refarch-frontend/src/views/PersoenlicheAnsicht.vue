@@ -43,7 +43,10 @@
           <v-text-field
               v-model="newTodo.title"
               placeholder="Titel"
-              :rules="[v => !!v || 'Titel ist erforderlich']"
+              :rules="[
+                v => !!v || 'Titel ist erforderlich',
+                v => v.length <= 100 || 'Titel darf maximal 100 Zeichen lang sein'
+              ]"
               required
           />
           <v-text-field
@@ -52,6 +55,9 @@
               type="textarea"
               :style="{ resize: 'none', minHeight: '200px' }"
               rows="5"
+              :rules="[
+                v => v.length <= 500 || 'Beschreibung darf maximal 500 Zeichen lang sein'
+              ]"
           ></v-text-field>
           <v-select
               v-model="newTodo.priority"
@@ -66,8 +72,11 @@
           />
           <div>
             <span v-if="!newTodo.title" style="color: red;">Titel ist erforderlich.</span>
+            <span v-if="newTodo.title.length > 100" style="color: red;">Titel darf maximal 100 Zeichen lang sein.</span>
             <span v-if="newTodo.deadlineDatum && !checkDateFormat(newTodo.deadlineDatum)" style="color: red;">Ungültiges Datum.</span>
+            <span v-if="newTodo.description.length > 500" style="color: red;">Beschreibung darf maximal 500 Zeichen lang sein.</span>
           </div>
+
         </v-card-text>
         <v-card-actions>
           <v-btn @click="closeModal">Abbrechen</v-btn>
@@ -119,7 +128,12 @@ export default {
     },
 
     canSave() {
-      return this.newTodo.title && (this.newTodo.deadlineDatum === "" || this.checkDateFormat(this.newTodo.deadlineDatum));
+      return (
+          this.newTodo.title &&
+          this.newTodo.title.length <= 100 &&
+          (this.newTodo.deadlineDatum === "" || this.checkDateFormat(this.newTodo.deadlineDatum)) &&
+          this.newTodo.description.length <= 500
+      );
     }
   },
 

@@ -22,36 +22,42 @@ public class ToDoController {
     }
 
     @GetMapping("/{todoId}")
+    @PreAuthorize(Authorities.THEENTITY_GET)
     public ResponseEntity<ToDoResponseDTO> getToDo(@PathVariable UUID todoId, @RequestParam UUID userId) {
         ToDoResponseDTO todo = toDoService.getToDo(todoId, userId);
         return ResponseEntity.ok(todo);
     }
 
     @PostMapping
+    @PreAuthorize(Authorities.THEENTITY_CREATE)
     public ResponseEntity<ToDoResponseDTO> createToDo(@RequestBody ToDoRequestDTO request, @RequestParam UUID userId) {
         ToDoResponseDTO createdToDo = toDoService.createToDo(request, userId);
         return ResponseEntity.ok(createdToDo);
     }
 
     @PutMapping("/{todoId}")
+    @PreAuthorize(Authorities.THEENTITY_UPDATE)
     public ResponseEntity<ToDoResponseDTO> updateToDo(@PathVariable UUID todoId, @RequestBody ToDoRequestDTO request, @RequestParam UUID userId) {
         ToDoResponseDTO updatedToDo = toDoService.updateToDo(request, todoId, userId);
         return ResponseEntity.ok(updatedToDo);
     }
 
     @DeleteMapping("/{todoId}")
+    @PreAuthorize(Authorities.THEENTITY_DELETE)
     public ResponseEntity<Void> deleteToDo(@PathVariable UUID todoId, @RequestParam UUID userId) {
         toDoService.deleteToDo(todoId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/priority")
+    @PreAuthorize(Authorities.THEENTITY_GET_ALL)
     public ResponseEntity<List<ToDoResponseDTO>> getToDosByPriority(@RequestParam Priority priority, @RequestParam UUID userId) {
         List<ToDoResponseDTO> todos = toDoService.getToDosByPriority(priority, userId);
         return ResponseEntity.ok(todos);
     }
 
     @GetMapping("/sorted")
+    @PreAuthorize(Authorities.THEENTITY_GET_ALL)
     public ResponseEntity<List<ToDoResponseDTO>> getAllToDosSortedByDeadline(@RequestParam UUID userId) {
         List<ToDoResponseDTO> todos = toDoService.getAllToDosSortedByDeadline(userId);
         return ResponseEntity.ok(todos);

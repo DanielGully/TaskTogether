@@ -4,7 +4,7 @@ realm: local_realm
 changes:
   - assignRole:
       user: reader
-      role: reader
+      role: writer
       clientId: local
   - assignRole:
       user: writer

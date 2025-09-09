@@ -12,6 +12,8 @@ public final class AuthUtils {
 
     public static final String NAME_UNAUTHENTICATED_USER = "unauthenticated";
 
+    private static final String TOKEN_USER_ID = "sub";
+
     private static final String TOKEN_USER_NAME = "preferred_username";
 
     private AuthUtils() {
@@ -31,6 +33,15 @@ public final class AuthUtils {
         } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
             final UsernamePasswordAuthenticationToken usernameAuth = (UsernamePasswordAuthenticationToken) authentication;
             return usernameAuth.getName();
+        } else {
+            return NAME_UNAUTHENTICATED_USER;
+        }
+    }
+
+    public static String getUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            return (String) jwtAuth.getTokenAttributes().getOrDefault(TOKEN_USER_ID, null);
         } else {
             return NAME_UNAUTHENTICATED_USER;
         }

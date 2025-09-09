@@ -64,7 +64,8 @@ public class ToDoService {
     }
 
     public List<ToDoResponseDTO> getToDosByPriority(Priority priority, UUID userId) {
-        List<ToDoEntity> todos = toDoRepository.findByPriorityAndUserId(priority, userId, Sort.by("deadlineDatum"));
+        List<ToDoEntity> todos = toDoRepository.findByPriorityAndUserId(priority, userId, Sort.by("deadlineDatum")
+                .and(Sort.by("title").ascending()));
         return todos.stream()
                 .map(toDoMapper::toDTO)
                 .toList();
@@ -82,7 +83,8 @@ public class ToDoService {
     public List<ToDoResponseDTO> getAllToDosForAdmin() {
         List<ToDoEntity> todos = toDoRepository.findAll(Sort.by("userId").ascending()
                 .and(Sort.by("deadlineDatum").ascending())
-                .and(Sort.by("priority").ascending()));
+                .and(Sort.by("priority").ascending())
+                .and(Sort.by("title").ascending()));
         return todos.stream()
                 .map(toDoMapper::toDTO)
                 .toList();
